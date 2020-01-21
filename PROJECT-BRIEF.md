@@ -74,9 +74,23 @@ There is no one “right” way to pair program, but in general, you will meet w
 
 ### Weekly Sync
 
-Each week, we’ll get on a 45 minute Zoom call. The call will always start with a quick demo of the previous week’s work from each pair. This is a common practice on most software teams and also lets you practice talking about your work, which can come in handy in a job interview setting!
+Each week, we’ll get on a 1-hour Zoom call. The call will always start with a *quick demo of the previous week’s work* from each pair. This is a common practice on most software teams and also lets you practice talking about your work, which can come in handy in a job interview setting!
 
-On odd-numbered weeks, we’ll use the rest of the time to cover a learning topic. On even-numbered weeks, we’ll do a short retrospective of the previous 2 weeks. In the retros, we’ll share appreciations of our teammates as well as talk about what went well from a process perspective and what we could do to improve how we’re working together.
+The way we use the rest of the time will vary based on whether it’s an even- or odd-numbered week, as follows:
+
+#### Odd-numbered weeks
+
+1. Demos/discussion (15 minutes)
+2. Learning module (30 minutes)
+3. Mentors meet with pairs to talk through approach to upcoming week’s work (15 minutes)
+
+#### Even-numbered weeks
+
+1. Demos/discussion (15 minutes)
+2. Retrospective (30 minutes)
+3. Mentors meet with pairs to talk through approach to upcoming week’s work (15 minutes)
+
+In our retros, we will share appreciations of our teammates as well as talk about what went well from a process perspective and what we could do to improve how we’re working together.
 
 ### How to know what to do
 
