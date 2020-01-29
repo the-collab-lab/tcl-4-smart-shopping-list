@@ -5,3 +5,11 @@
 .nonactive {
   background-color: #fbd490;
 }
+
+footer {
+  display: flex;
+}
+
+button {
+  width: 100%;
+}
