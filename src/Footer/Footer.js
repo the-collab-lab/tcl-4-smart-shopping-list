@@ -4,24 +4,26 @@ import classes from "./Footer.module.css";
 import PropTypes from "prop-types";
 
 const Footer = ({
-  isListSelected,
-  setIsListSelected,
+  onListSelect,
+  onAddSelect,
   isAddSelected,
-  setIsAddSelected
+  isListSelected
 }) => {
   return (
-    <footer>
+    <footer className={classes.footer}>
       <NavLink to="/" exact>
         <button
-          onClick={() => setIsListSelected(!isListSelected)}
+          onClick={onListSelect}
           className={isListSelected ? classes.active : classes.nonactive}
+          id={classes.footerButton}
         >
           Item List
         </button>
       </NavLink>
       <NavLink to="/add" exact>
         <button
-          onClick={() => setIsAddSelected(!isAddSelected)}
+          id={classes.footerButton}
+          onClick={onAddSelect}
           className={isAddSelected ? classes.active : classes.nonactive}
         >
           Add Items
@@ -33,9 +35,9 @@ const Footer = ({
 
 Footer.propTypes = {
   isListSelected: PropTypes.bool.isRequired,
-  setIsListSelected: PropTypes.func.isRequired,
+  onListSelect: PropTypes.func.isRequired,
   isAddSelected: PropTypes.bool.isRequired,
-  setIsAddSelected: PropTypes.func.isRequired
+  onAddSelect: PropTypes.func.isRequired
 };
 
 export default Footer;
