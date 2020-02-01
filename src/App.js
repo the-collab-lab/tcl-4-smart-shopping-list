@@ -25,8 +25,8 @@ function App() {
       <Header isAddSelected={isAddSelected} onListSelect={selectListHandler} />
       <div className="App">
         <Switch>
-          <Route path="/" exact render={() => <List />} />
-          <Route path="/add" exact render={() => <AddItem />} />
+          <Route exact path="/"><List /></Route>
+          <Route exact path="/add"><AddItem /></Route>
         </Switch>
       </div>
       <Footer
