@@ -16,22 +16,17 @@ class Items extends React.Component {
     this.setState({
       [e.target.name]: e.target.value
     });
-    console.log(this.state);
   };
 
   addItem = e => {
     e.preventDefault();
     let db = firebase.firestore();
-    // db.settings({
-    //     timestampsInSnapshots: true
-    // });
-    const itemRef = db.collection("items").add({
+    db.collection("items").add({
       itemName: this.state.itemName
     });
     this.setState({
       itemName: ""
     });
-    console.log(this.state);
   };
 
   componentDidMount() {
@@ -40,7 +35,6 @@ class Items extends React.Component {
       .get()
       .then(querySnapshot => {
         const data = querySnapshot.docs.map(doc => doc.data());
-        console.log(data);
         this.setState({
           dbItems: data
         });
@@ -62,12 +56,11 @@ class Items extends React.Component {
         </form>
 
         {/* render items here */}
-        <div>
+        <ul>
           {this.state.dbItems.map((item, index) => {
-            console.log(item);
             return <li key={index}>{item.itemName}</li>;
           })}
-        </div>
+        </ul>
       </div>
     );
   }
