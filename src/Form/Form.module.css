@@ -1,0 +1,20 @@
+form {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  margin: auto;
+  margin-bottom: 3rem;
+}
+
+input {
+  margin: 0.5rem 0;
+}
+
+label {
+  padding: 0 1rem;
+}
+
+.inputName,
+.inputDate {
+  text-align: center;
+}
