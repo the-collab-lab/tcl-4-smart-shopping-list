@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import classes from "./Form.module.css";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 const Form = () => {
   const [name, setName] = useState("");
@@ -8,9 +10,15 @@ const Form = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log(name);
-    console.log(frequency);
-    console.log(date);
+    let db = firebase.firestore();
+    let data = {
+      name,
+      frequency,
+      date
+    };
+    db.collection("userThree").add(data);
+    // userThree will be replaced by user token
+    // a new doc is created with each submission.
   };
 
   return (
