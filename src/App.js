@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 import "./App.css";
@@ -7,7 +6,7 @@ import AddItem from "./AddItem/AddItem";
 import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
 import Items from "./Item.js";
-
+import token from "./lib/token";
 
 function App() {
   const [isListSelected, setIsListSelected] = useState(true);
@@ -24,14 +23,17 @@ function App() {
   };
 
   return (
-
     <BrowserRouter>
       <Header isAddSelected={isAddSelected} onListSelect={selectListHandler} />
       <div className="App">
-       <Items />
+        <Items />
         <Switch>
-          <Route exact path="/"><List /></Route>
-          <Route exact path="/add"><AddItem /></Route>
+          <Route exact path="/">
+            <List />
+          </Route>
+          <Route exact path="/add">
+            <AddItem />
+          </Route>
         </Switch>
       </div>
       <Footer
