@@ -6,11 +6,12 @@ import AddItem from "./AddItem/AddItem";
 import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
 import Items from "./Item.js";
-import token from "./lib/token";
+import getToken from "./lib/token";
 
 function App() {
   const [isListSelected, setIsListSelected] = useState(true);
   const [isAddSelected, setIsAddSelected] = useState(false);
+  const [token, setToken] = useState("");
 
   const selectListHandler = () => {
     setIsListSelected(true);
@@ -20,6 +21,12 @@ function App() {
   const selectAddHandler = () => {
     setIsListSelected(false);
     setIsAddSelected(true);
+  };
+
+  const generateTokenHandler = () => {
+    let newToken = getToken();
+    setToken(newToken);
+    localStorage.setItem(newToken, newToken);
   };
 
   return (
@@ -35,6 +42,9 @@ function App() {
             <AddItem />
           </Route>
         </Switch>
+        Generate your token:
+        <button onClick={generateTokenHandler}>here</button>
+        <p>{token}</p>
       </div>
       <Footer
         onListSelect={selectListHandler}

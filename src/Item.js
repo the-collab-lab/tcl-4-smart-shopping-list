@@ -31,7 +31,7 @@ class Items extends React.Component {
 
   componentDidMount() {
     let db = firebase.firestore();
-    db.collection("items")
+    db.collection("userThree")
       .get()
       .then(querySnapshot => {
         const data = querySnapshot.docs.map(doc => doc.data());
@@ -58,7 +58,7 @@ class Items extends React.Component {
         {/* render items here */}
         <ul>
           {this.state.dbItems.map((item, index) => {
-            return <li key={index}>{item.itemName}</li>;
+            return <li key={index}>{item.name}</li>;
           })}
         </ul>
       </div>
