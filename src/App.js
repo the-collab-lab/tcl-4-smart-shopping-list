@@ -36,15 +36,12 @@ function App() {
         <Items />
         <Switch>
           <Route exact path="/">
-            <List />
+            <List token={token} onGenerateToken={generateTokenHandler} />
           </Route>
           <Route exact path="/add">
             <AddItem />
           </Route>
         </Switch>
-        Generate your token:
-        <button onClick={generateTokenHandler}>here</button>
-        <p>{token}</p>
       </div>
       <Footer
         onListSelect={selectListHandler}
