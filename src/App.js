@@ -5,7 +5,7 @@ import List from "./List/List";
 import AddItem from "./AddItem/AddItem";
 import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
-import Items from "./Item.js";
+import Item from "./Item";
 
 function App() {
   const [isListSelected, setIsListSelected] = useState(true);
@@ -25,7 +25,6 @@ function App() {
     <BrowserRouter>
       <Header isAddSelected={isAddSelected} onListSelect={selectListHandler} />
       <div className="App">
-        {/* <Items /> */}
         <Switch>
           <Route exact path="/">
             <List />

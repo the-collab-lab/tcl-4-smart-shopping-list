@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import classes from "./Form.module.css";
 import firebase from "firebase/app";
-import "firebase/firestore";
 
 const Form = () => {
   const [name, setName] = useState("");
@@ -22,7 +21,7 @@ const Form = () => {
   };
 
   return (
-    <form onSubmit={e => handleSubmit(e)}>
+    <form className={classes.form} onSubmit={e => handleSubmit(e)}>
       <h3 className={classes.formTitle}>Add New Item</h3>
       <input
         className={classes.inputName}
@@ -34,8 +33,9 @@ const Form = () => {
         required
       />
       <div>
-        <label>
+        <label className={classes.inputLabel}>
           <input
+            className={classes.inputFrequency}
             type="radio"
             name="frequency"
             value="7"
@@ -43,8 +43,9 @@ const Form = () => {
           />{" "}
           Soon
         </label>
-        <label>
+        <label className={classes.inputLabel}>
           <input
+            className={classes.inputFrequency}
             type="radio"
             name="frequency"
             value="14"
@@ -52,8 +53,9 @@ const Form = () => {
           />{" "}
           Kind of Soon
         </label>
-        <label>
+        <label className={classes.inputLabel}>
           <input
+            className={classes.inputFrequency}
             type="radio"
             name="frequency"
             value="30"
