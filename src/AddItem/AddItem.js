@@ -1,9 +1,10 @@
 import React from "react";
+import Form from "../../src/Form/Form";
 
 function AddItem() {
   return (
     <div>
-      <h1>Add an item!</h1>
+      <Form />
     </div>
   );
 }
