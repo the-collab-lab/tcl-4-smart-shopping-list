@@ -1,0 +1,22 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  margin: auto;
+  margin-bottom: 3rem;
+}
+
+.inputName,
+.inputFrequency,
+.inputDate {
+  margin: 0.5rem 0;
+}
+
+.inputName,
+.inputDate {
+  text-align: center;
+}
+
+.inputLabel {
+  padding: 0 1rem;
+}
