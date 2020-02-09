@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import classes from "./Form.module.css";
-import fb from "../lib/firebase";
+import * as firebase from "../lib/firebase";
 
 const Form = props => {
   const [name, setName] = useState("");
@@ -9,7 +9,7 @@ const Form = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    let db = fb.firestore();
+    let db = firebase.fb.firestore();
     let data = {
       name,
       frequency,

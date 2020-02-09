@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "firebase/firestore";
-import fb from "../lib/firebase";
+import * as firebase from "../lib/firebase";
 
 const Items = props => {
   const [dbItems, setdbItems] = useState([]);
 
   useEffect(() => {
     if (props.token) {
-      let db = fb.firestore();
+      let db = firebase.fb.firestore();
       db.collection(props.token)
         .get()
         .then(querySnapshot => {
