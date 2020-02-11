@@ -50,7 +50,12 @@ function App() {
             />
           </Route>
           <Route exact path="/add">
-            <Form token={token} onEnterToken={enterTokenHandler} />
+            <Form
+              token={token}
+              onEnterToken={enterTokenHandler}
+              dbItems={dbItems}
+              setdbItems={setdbItems}
+            />
           </Route>
         </Switch>
       </div>
