@@ -1,28 +1,45 @@
 import React, { useState } from "react";
 import classes from "./Form.module.css";
-import firebase from "firebase/app";
+import * as firebase from "../lib/firebase";
 
-const Form = () => {
+const Form = props => {
   const [name, setName] = useState("");
   const [frequency, setFrequency] = useState(0);
   const [date, setDate] = useState("");
 
   const handleSubmit = e => {
     e.preventDefault();
-    let db = firebase.firestore();
+    let db = firebase.fb.firestore();
     let data = {
       name,
       frequency,
       date
     };
-    db.collection("userThree").add(data);
-    // userThree will be replaced by user token
-    // a new doc is created with each submission.
+    db.collection(props.token)
+      .add(data)
+      .then(function() {
+        alert("Item added!");
+      })
+      .catch(function(error) {
+        alert("Something went wrong!");
+        console.error("Error writing document: ", error);
+      });
   };
 
   return (
     <form className={classes.form} onSubmit={e => handleSubmit(e)}>
       <h3 className={classes.formTitle}>Add New Item</h3>
+      <input
+        className={classes.inputName}
+        type="text"
+        name="token"
+        placeholder="List Token"
+        value={props.token}
+        onChange={e => {
+          props.onEnterToken(e);
+        }}
+        required
+      />
       <input
         className={classes.inputName}
         type="text"
