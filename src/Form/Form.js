@@ -12,10 +12,11 @@ const Form = props => {
     e.preventDefault();
     let db = firebase.fb.firestore();
     let newName = name.toUpperCase();
+    const nameArray = newName.split("");
 
     const existingItem = dbItems.find(element => {
       // console.log(newName, element.name.toUpperCase())
-      return element.name.toUpperCase() === newName;
+      return element.name === newName;
     });
 
     if (existingItem === undefined) {
