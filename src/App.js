@@ -11,6 +11,8 @@ function App() {
   const [isListSelected, setIsListSelected] = useState(true);
   const [isAddSelected, setIsAddSelected] = useState(false);
   const [token, setToken] = useState("");
+  const [newDisplay, setNewDisplay] = useState(false);
+  const [existingDisplay, setExistingDisplay] = useState(false);
 
   const selectListHandler = () => {
     setIsListSelected(true);
@@ -26,10 +28,15 @@ function App() {
     let newToken = getToken();
     setToken(newToken);
     localStorage.setItem(newToken, newToken);
+    setNewDisplay(true);
   };
 
   const enterTokenHandler = e => {
     setToken(e.target.value);
+  };
+
+  const existingToken = () => {
+    setExistingDisplay(true);
   };
 
   return (
@@ -38,10 +45,25 @@ function App() {
       <div className="App">
         <Switch>
           <Route exact path="/">
-            <button onClick={generateTokenHandler}>Get your list token!</button>
-            <p>{token}</p>
-            <p>Or enter an existing token to see your list below.</p>
-            <ItemList token={token} onEnterToken={enterTokenHandler} />
+            <button onClick={generateTokenHandler}>Get New Token</button>
+            <button onClick={existingToken}>Existing Token</button>
+
+            {/* show onclick with new */}
+
+            {newDisplay && (
+              <div>
+                <p>{token}</p>
+                <p>Or enter an existing token to see your list below.</p>
+
+                <ItemList token={token} onEnterToken={enterTokenHandler} />
+              </div>
+            )}
+
+            {existingDisplay && (
+              <div>
+                <ItemList token={token} onEnterToken={enterTokenHandler} />
+              </div>
+            )}
           </Route>
           <Route exact path="/add">
             <Form token={token} onEnterToken={enterTokenHandler} />
