@@ -11,15 +11,19 @@ const Form = props => {
   const handleSubmit = e => {
     e.preventDefault();
     let db = firebase.fb.firestore();
-    let newName = name.toUpperCase();
-    const nameArray = newName.split("");
-
+    let newName = name
+      .toUpperCase()
+      .replace(/[^\w\s]|_/g, "")
+      .replace(/\s+/g, " ");
     const existingItem = dbItems.find(element => {
-      // console.log(newName, element.name.toUpperCase())
-      return element.name === newName;
+      let newElement = element.name
+        .toUpperCase()
+        .replace(/[^\w\s]|_/g, "")
+        .replace(/\s+/g, " ");
+      return newElement === newName;
     });
 
-    if (existingItem === undefined) {
+    if (!existingItem) {
       let data = {
         name,
         frequency,
@@ -45,7 +49,7 @@ const Form = props => {
             })
         );
     } else {
-      alert("Item already in list");
+      alert("Item already in list.");
     }
   };
 
