@@ -12,8 +12,8 @@ function App() {
   const [isListSelected, setIsListSelected] = useState(true);
   const [isAddSelected, setIsAddSelected] = useState(false);
   const [token, setToken] = useState("");
-  const [showNew, setShowNew] = useState(false);
-  const [showExisting, setShowExisting] = useState(false);
+  const [showNewToken, setShowNewToken] = useState(false);
+  const [showExistingToken, setShowExistingToken] = useState(false);
 
   const selectListHandler = () => {
     setIsListSelected(true);
@@ -29,17 +29,17 @@ function App() {
     let newToken = getToken();
     setToken(newToken);
     localStorage.setItem(newToken, newToken);
-    setShowExisting(false);
-    setShowNew(true);
+    setShowExistingToken(false);
+    setShowNewToken(true);
   };
 
   const enterTokenHandler = e => {
     setToken(e.target.value);
   };
 
-  const existingToken = () => {
-    setShowNew(false);
-    setShowExisting(true);
+  const handleExistingToken = () => {
+    setShowNewToken(false);
+    setShowExistingToken(true);
   };
 
   // creates new collection with a blank document
@@ -64,18 +64,16 @@ function App() {
         <Switch>
           <Route exact path="/">
             <button onClick={generateTokenHandler}>Get New Token</button>
-            <button onClick={existingToken}>Existing Token?</button>
+            <button onClick={handleExistingToken}>Existing Token?</button>
 
-            {/* To be displayed when "Get New Token" is clicked */}
-            {showNew && (
+            {showNewToken && (
               <div>
                 <p>{token}</p>
                 <button onClick={e => handleSubmit((e, token))}>Submit</button>
               </div>
             )}
 
-            {/* To be displayed when "Existing Token" is clicked */}
-            {showExisting && (
+            {showExistingToken && (
               <div>
                 <ItemList token={token} onEnterToken={enterTokenHandler} />
               </div>
