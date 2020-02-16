@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
 
 const Items = props => {
-  const [dbItems, setdbItems] = useState([]);
+  const { setdbItems, token, dbItems, onEnterToken } = props;
 
   useEffect(() => {
-    if (props.token) {
+    if (token) {
       let db = firebase.fb.firestore();
-      db.collection(props.token)
+      db.collection(token)
         .get()
         .then(querySnapshot => {
           const data = querySnapshot.docs.map(doc => doc.data());
           setdbItems(data);
         });
     }
-  }, [props.token]);
+  }, [token, setdbItems, props]);
 
   return (
     <div>
@@ -24,9 +24,9 @@ const Items = props => {
         name="token"
         placeholder="enter token"
         onChange={e => {
-          props.onEnterToken(e);
+          onEnterToken(e);
         }}
-        value={props.token}
+        value={token}
       />
       <ul>
         {dbItems.map((item, index) => {

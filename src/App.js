@@ -11,6 +11,7 @@ function App() {
   const [isListSelected, setIsListSelected] = useState(true);
   const [isAddSelected, setIsAddSelected] = useState(false);
   const [token, setToken] = useState("");
+  const [dbItems, setdbItems] = useState([]);
 
   const selectListHandler = () => {
     setIsListSelected(true);
@@ -41,10 +42,20 @@ function App() {
             <button onClick={generateTokenHandler}>Get your list token!</button>
             <p>{token}</p>
             <p>Or enter an existing token to see your list below.</p>
-            <ItemList token={token} onEnterToken={enterTokenHandler} />
+            <ItemList
+              token={token}
+              onEnterToken={enterTokenHandler}
+              dbItems={dbItems}
+              setdbItems={setdbItems}
+            />
           </Route>
           <Route exact path="/add">
-            <Form token={token} onEnterToken={enterTokenHandler} />
+            <Form
+              token={token}
+              onEnterToken={enterTokenHandler}
+              dbItems={dbItems}
+              setdbItems={setdbItems}
+            />
           </Route>
         </Switch>
       </div>
