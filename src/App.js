@@ -14,6 +14,7 @@ function App() {
   const [token, setToken] = useState("");
   const [showNewToken, setShowNewToken] = useState(false);
   const [showExistingToken, setShowExistingToken] = useState(false);
+  const [dbItems, setdbItems] = useState([]);
 
   const selectListHandler = () => {
     setIsListSelected(true);
@@ -75,12 +76,22 @@ function App() {
 
             {showExistingToken && (
               <div>
-                <ItemList token={token} onEnterToken={enterTokenHandler} />
+                <ItemList
+                  token={token}
+                  onEnterToken={enterTokenHandler}
+                  dbItems={dbItems}
+                  setdbItems={setdbItems}
+                />
               </div>
             )}
           </Route>
           <Route exact path="/add">
-            <Form token={token} onEnterToken={enterTokenHandler} />
+            <Form
+              token={token}
+              onEnterToken={enterTokenHandler}
+              dbItems={dbItems}
+              setdbItems={setdbItems}
+            />
           </Route>
         </Switch>
       </div>

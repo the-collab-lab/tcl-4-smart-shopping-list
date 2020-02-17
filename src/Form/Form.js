@@ -3,6 +3,7 @@ import classes from "./Form.module.css";
 import * as firebase from "../lib/firebase";
 
 const Form = props => {
+  const { setdbItems, dbItems, token, onEnterToken } = props;
   const [name, setName] = useState("");
   const [frequency, setFrequency] = useState(0);
   const [date, setDate] = useState("");
@@ -10,20 +11,46 @@ const Form = props => {
   const handleSubmit = e => {
     e.preventDefault();
     let db = firebase.fb.firestore();
-    let data = {
-      name,
-      frequency,
-      date
-    };
-    db.collection(props.token)
-      .add(data)
-      .then(function() {
-        alert("Item added!");
-      })
-      .catch(function(error) {
-        alert("Something went wrong!");
-        console.error("Error writing document: ", error);
-      });
+    let newName = name
+      .toUpperCase()
+      .replace(/[^\w\s]|_/g, "")
+      .replace(/\s+/g, " ");
+    const existingItem = dbItems.find(element => {
+      let newElement = element.name
+        .toUpperCase()
+        .replace(/[^\w\s]|_/g, "")
+        .replace(/\s+/g, " ");
+      return newElement === newName;
+    });
+
+    if (!existingItem) {
+      let data = {
+        name,
+        frequency,
+        date
+      };
+      db.collection(token)
+        .add(data)
+        .then(function() {
+          alert("Item added!");
+        })
+        .catch(function(error) {
+          alert("Something went wrong!");
+          console.error("Error writing document: ", error);
+        })
+        .then(
+          db
+            .collection(token)
+            .get()
+            .then(querySnapshot => {
+              const data = querySnapshot.docs.map(doc => doc.data());
+              setdbItems(data);
+              console.log(data);
+            })
+        );
+    } else {
+      alert("Item already in list.");
+    }
   };
 
   return (
@@ -34,9 +61,9 @@ const Form = props => {
         type="text"
         name="token"
         placeholder="List Token"
-        value={props.token}
+        value={token}
         onChange={e => {
-          props.onEnterToken(e);
+          onEnterToken(e);
         }}
         required
       />
