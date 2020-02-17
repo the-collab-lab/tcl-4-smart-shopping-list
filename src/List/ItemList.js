@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
+import { NavLink } from "react-router-dom";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
 
@@ -28,11 +29,20 @@ const Items = props => {
         }}
         value={token}
       />
-      <ul>
-        {dbItems.map((item, index) => {
-          return <li key={index}>{item.name}</li>;
-        })}
-      </ul>
+      {dbItems.length === 0 ? (
+        <Fragment>
+          <p>No List Found</p>
+          <NavLink to="/add" exact>
+            <button>Add 1st Item</button>
+          </NavLink>
+        </Fragment>
+      ) : (
+        <ul>
+          {dbItems.map((item, index) => {
+            return <li key={index}>{item.name}</li>;
+          })}
+        </ul>
+      )}
     </div>
   );
 };
