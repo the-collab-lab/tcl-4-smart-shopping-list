@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { NavLink } from "react-router-dom";
-import React, { useEffect } from "react";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
 
