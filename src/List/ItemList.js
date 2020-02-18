@@ -1,10 +1,17 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useEffect, Fragment } from "react";
 import { NavLink } from "react-router-dom";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
 
 const Items = props => {
-  const { setdbItems, token, dbItems, onEnterToken } = props;
+  const {
+    setdbItems,
+    token,
+    dbItems,
+    onEnterToken,
+    isPurchased,
+    setIsPurchased
+  } = props;
 
   useEffect(() => {
     if (token) {
@@ -17,6 +24,10 @@ const Items = props => {
         });
     }
   }, [token, setdbItems, props]);
+
+  const handleChange = () => {
+    setIsPurchased(prevState => !prevState);
+  };
 
   return (
     <div>
@@ -39,7 +50,20 @@ const Items = props => {
       ) : (
         <ul>
           {dbItems.map((item, index) => {
-            return <li key={index}>{item.name}</li>;
+            return (
+              <li key={index}>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="isPurchased"
+                    checked={isPurchased}
+                    onChange={handleChange}
+                    value={item.name}
+                  />
+                  {item.name}
+                </label>
+              </li>
+            );
           })}
         </ul>
       )}

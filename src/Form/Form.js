@@ -3,7 +3,7 @@ import classes from "./Form.module.css";
 import * as firebase from "../lib/firebase";
 
 const Form = props => {
-  const { setdbItems, dbItems, token, onEnterToken } = props;
+  const { setdbItems, dbItems, token, onEnterToken, isPurchased } = props;
   const [name, setName] = useState("");
   const [frequency, setFrequency] = useState(0);
   const [date, setDate] = useState("");
@@ -27,7 +27,8 @@ const Form = props => {
       let data = {
         name,
         frequency,
-        date
+        date,
+        isPurchased
       };
       db.collection(token)
         .add(data)
