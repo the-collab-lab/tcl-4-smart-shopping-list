@@ -13,20 +13,36 @@ const Items = props => {
     setIsPurchased
   } = props;
 
+  const day = 86400; //24 hours in seconds
+
   useEffect(() => {
     if (token) {
+      let newDay = new Date();
       let db = firebase.fb.firestore();
       db.collection(token)
         .get()
         .then(querySnapshot => {
-          const data = querySnapshot.docs.map(doc => doc.data());
+          const data = querySnapshot.docs.map(doc => {
+            return doc.data();
+          });
+          for (let i = 0; i < data.length; i++) {
+            if (newDay - data[i].datePurchased > day) {
+              db.collection(token)
+                .doc(data[i].name)
+                .update({ isPurchased: true, datePurchased: "" });
+            }
+          }
           setdbItems(data);
         });
     }
-  }, [token, setdbItems, props]);
+  }, [token, setdbItems, dbItems, props]);
 
-  const handleChange = () => {
-    setIsPurchased(prevState => !prevState);
+  const handleChange = e => {
+    let datePurchased = new Date();
+    let db = firebase.fb.firestore();
+    db.collection(token)
+      .doc(e.target.value)
+      .update({ isPurchased: true, datePurchased: datePurchased });
   };
 
   return (
@@ -56,8 +72,8 @@ const Items = props => {
                   <input
                     type="checkbox"
                     name="isPurchased"
-                    checked={isPurchased}
-                    onChange={handleChange}
+                    checked={item.isPurchased}
+                    onChange={e => handleChange(e)}
                     value={item.name}
                   />
                   {item.name}

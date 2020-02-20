@@ -16,10 +16,14 @@ const Form = props => {
       .replace(/[^\w\s]|_/g, "")
       .replace(/\s+/g, " ");
     const existingItem = dbItems.find(element => {
-      let newElement = element.name
-        .toUpperCase()
-        .replace(/[^\w\s]|_/g, "")
-        .replace(/\s+/g, " ");
+      let newElement;
+      //adding items to the list auto adds one empty item which causes everything to crash when checking for its name without this condition
+      if (element.name !== undefined) {
+        newElement = element.name
+          .toUpperCase()
+          .replace(/[^\w\s]|_/g, "")
+          .replace(/\s+/g, " ");
+      }
       return newElement === newName;
     });
 
@@ -28,10 +32,13 @@ const Form = props => {
         name,
         frequency,
         date,
-        isPurchased
+        isPurchased: false
       };
+
+      //setting the doc id to match the item name so it's easier to find a match
       db.collection(token)
-        .add(data)
+        .doc(name)
+        .set(data)
         .then(function() {
           alert("Item added!");
         })
@@ -46,7 +53,6 @@ const Form = props => {
             .then(querySnapshot => {
               const data = querySnapshot.docs.map(doc => doc.data());
               setdbItems(data);
-              console.log(data);
             })
         );
     } else {
