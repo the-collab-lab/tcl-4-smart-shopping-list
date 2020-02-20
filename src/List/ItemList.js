@@ -2,9 +2,11 @@ import React, { useState, useEffect, Fragment } from "react";
 import { NavLink } from "react-router-dom";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
+import classes from "./List.module.css";
 
 const Items = props => {
   const { setdbItems, token, dbItems, onEnterToken } = props;
+  const [filterInput, setFilterInput] = useState("");
 
   useEffect(() => {
     if (token) {
@@ -18,8 +20,14 @@ const Items = props => {
     }
   }, [token, setdbItems, props]);
 
+  const clearValues = e => {
+    // logging input testing
+    // console.log(filterInput)
+    setFilterInput("");
+  };
+
   return (
-    <div>
+    <div className={classes.listInput}>
       <input
         type="text"
         name="token"
@@ -29,6 +37,16 @@ const Items = props => {
         }}
         value={token}
       />
+
+      <input
+        type="text"
+        name="filter"
+        placeholder="search items"
+        onChange={e => setFilterInput(e.target.value)}
+        value={filterInput}
+      />
+      <button onClick={clearValues}>X</button>
+
       {dbItems.length === 0 ? (
         <Fragment>
           <p>No List Found</p>
