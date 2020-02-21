@@ -25,13 +25,17 @@ const Items = props => {
           const data = querySnapshot.docs.map(doc => {
             return doc.data();
           });
-          for (let i = 0; i < data.length; i++) {
-            if (newDay - data[i].datePurchased > day) {
-              db.collection(token)
-                .doc(data[i].name)
-                .update({ isPurchased: true, datePurchased: "" });
-            }
-          }
+
+          //here we are trying to update the purchased item, kind of working too well
+          // for (let i = 0; i < data.length; i++) {
+          //   if (data[i].isPurchased) {
+          //     if ((newDay.getTime() - data[i].datePurchased.seconds) > 10 ) {
+          //       db.collection(token)
+          //         .doc(data[i].name)
+          //         .update({ isPurchased: false, datePurchased: newDay });
+          //     }
+          //   }
+          // }
           setdbItems(data);
         });
     }
@@ -43,8 +47,8 @@ const Items = props => {
     db.collection(token)
       .doc(e.target.value)
       .update({ isPurchased: true, datePurchased: datePurchased });
+    console.log(dbItems);
   };
-
   return (
     <div>
       <input
