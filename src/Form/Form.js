@@ -3,7 +3,7 @@ import classes from "./Form.module.css";
 import * as firebase from "../lib/firebase";
 
 const Form = props => {
-  const { setdbItems, dbItems, token, onEnterToken, isPurchased } = props;
+  const { setdbItems, dbItems, token, onEnterToken } = props;
   const [name, setName] = useState("");
   const [frequency, setFrequency] = useState(0);
   const [date, setDate] = useState("");
@@ -31,8 +31,7 @@ const Form = props => {
       let data = {
         name,
         frequency,
-        date,
-        isPurchased: false
+        date
       };
 
       //setting the doc id to match the item name so it's easier to find a match

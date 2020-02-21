@@ -15,7 +15,6 @@ function App() {
   const [showNewToken, setShowNewToken] = useState(false);
   const [showExistingToken, setShowExistingToken] = useState(false);
   const [dbItems, setdbItems] = useState([]);
-  const [isPurchased, setIsPurchased] = useState(false);
 
   const selectListHandler = () => {
     setIsListSelected(true);
@@ -82,8 +81,6 @@ function App() {
                   onEnterToken={enterTokenHandler}
                   dbItems={dbItems}
                   setdbItems={setdbItems}
-                  isPurchased={isPurchased}
-                  setIsPurchased={setIsPurchased}
                 />
               </div>
             )}
@@ -94,7 +91,6 @@ function App() {
               onEnterToken={enterTokenHandler}
               dbItems={dbItems}
               setdbItems={setdbItems}
-              isPurchased={isPurchased}
             />
           </Route>
         </Switch>

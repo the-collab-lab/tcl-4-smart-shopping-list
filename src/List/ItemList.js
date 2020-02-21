@@ -4,20 +4,10 @@ import "firebase/firestore";
 import * as firebase from "../lib/firebase";
 
 const Items = props => {
-  const {
-    setdbItems,
-    token,
-    dbItems,
-    onEnterToken,
-    isPurchased,
-    setIsPurchased
-  } = props;
-
-  const day = 86400; //24 hours in seconds
+  const { setdbItems, token, dbItems, onEnterToken } = props;
 
   useEffect(() => {
     if (token) {
-      let newDay = new Date();
       let db = firebase.fb.firestore();
       db.collection(token)
         .get()
@@ -25,17 +15,6 @@ const Items = props => {
           const data = querySnapshot.docs.map(doc => {
             return doc.data();
           });
-
-          //here we are trying to update the purchased item, kind of working too well
-          // for (let i = 0; i < data.length; i++) {
-          //   if (data[i].isPurchased) {
-          //     if ((newDay.getTime() - data[i].datePurchased.seconds) > 10 ) {
-          //       db.collection(token)
-          //         .doc(data[i].name)
-          //         .update({ isPurchased: false, datePurchased: newDay });
-          //     }
-          //   }
-          // }
           setdbItems(data);
         });
     }
@@ -46,9 +25,20 @@ const Items = props => {
     let db = firebase.fb.firestore();
     db.collection(token)
       .doc(e.target.value)
-      .update({ isPurchased: true, datePurchased: datePurchased });
+      .update({ datePurchased });
     console.log(dbItems);
   };
+
+  const hours24 = 86400; //24 hours in seconds
+
+  const is24Hours = item => {
+    let newDay = new Date();
+    if (item.datePurchased) {
+      return newDay.getTime() - item.datePurchased.seconds > 5;
+    }
+    return false;
+  };
+
   return (
     <div>
       <input
@@ -76,7 +66,7 @@ const Items = props => {
                   <input
                     type="checkbox"
                     name="isPurchased"
-                    checked={item.isPurchased}
+                    checked={is24Hours(item)}
                     onChange={e => handleChange(e)}
                     value={item.name}
                   />
