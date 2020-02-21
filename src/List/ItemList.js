@@ -20,6 +20,7 @@ const Items = props => {
     }
   }, [token, setdbItems, dbItems, props]);
 
+  //This will update an item to include a purchase date
   const handleChange = e => {
     let datePurchased = new Date();
     let db = firebase.fb.firestore();
@@ -30,13 +31,14 @@ const Items = props => {
   };
 
   const hours24 = 86400; //24 hours in seconds
-
+  //A checked box will remain true for 24 hours
   const is24Hours = item => {
     let newDay = new Date();
     if (item.datePurchased) {
-      return newDay.getTime() - item.datePurchased.seconds > 5;
+      return newDay.getTime() / 1000 - item.datePurchased.seconds < hours24;
+    } else {
+      return false;
     }
-    return false;
   };
 
   return (
