@@ -20,6 +20,13 @@ const Items = props => {
     }
   }, [token, setdbItems, props]);
 
+  useEffect(() => {
+    const filteredDbItems = dbItems.filter(item => {
+      return item.includes("a");
+    });
+    setdbItems(filteredDbItems);
+  });
+
   const clearValues = e => {
     // logging input testing
     // console.log(filterInput)
