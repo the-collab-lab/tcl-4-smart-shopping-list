@@ -20,16 +20,23 @@ const Items = props => {
     }
   }, [token, setdbItems, props]);
 
+  const handleChange = e => {
+    setFilterInput(e.target.value);
+  };
+
   useEffect(() => {
-    const filteredDbItems = dbItems.filter(item => {
-      return item.includes("a");
+    const filteredArray = dbItems.map(item => {
+      return item.name;
+    });
+
+    const filteredDbItems = filteredArray.filter(item => {
+      console.log(filteredArray);
+      return item.includes(filterInput);
     });
     setdbItems(filteredDbItems);
-  });
+  }, [filterInput]);
 
   const clearValues = e => {
-    // logging input testing
-    // console.log(filterInput)
     setFilterInput("");
   };
 
@@ -49,7 +56,7 @@ const Items = props => {
         type="text"
         name="filter"
         placeholder="search items"
-        onChange={e => setFilterInput(e.target.value)}
+        onChange={handleChange}
         value={filterInput}
       />
       <button onClick={clearValues}>X</button>
