@@ -60,7 +60,9 @@ const Items = props => {
       ) : (
         <ul>
           {dbItems
-            .filter(item => item.name.includes(filterInput.toLowerCase()))
+            .filter(item =>
+              item.name.toLowerCase().includes(filterInput.toLowerCase())
+            )
             .map((item, index) => {
               return <li key={index}>{item.name}</li>;
             })}
