@@ -25,14 +25,16 @@ const Items = props => {
   };
 
   useEffect(() => {
+    // mapping through the dbItems to extract the item names
     const filteredArray = dbItems.map(item => {
       return item.name;
     });
-
+    // filtered through the array of names to match with user input
     const filteredDbItems = filteredArray.filter(item => {
       console.log(filteredArray);
       return item.includes(filterInput);
     });
+    //updating the dbItems state to the newly filtered array
     setdbItems(filteredDbItems);
   }, [filterInput]);
 
@@ -70,6 +72,7 @@ const Items = props => {
         </Fragment>
       ) : (
         <ul>
+          {/* Currently renders items from the initial mount. The goal is to display the filtered list onChange */}
           {dbItems.map((item, index) => {
             return <li key={index}>{item.name}</li>;
           })}
