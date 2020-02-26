@@ -41,6 +41,14 @@ const Items = props => {
     }
   };
 
+  // delete list item
+  const handleDelete = e => {
+    let db = firebase.fb.firestore();
+    db.collection(token)
+      .doc(e.target.value)
+      .delete();
+  };
+
   return (
     <div>
       <input
@@ -73,6 +81,9 @@ const Items = props => {
                     value={item.name}
                   />
                   {item.name}
+                  <button onClick={e => handleDelete(e)} value={item.name}>
+                    X{" "}
+                  </button>
                 </label>
               </li>
             );
