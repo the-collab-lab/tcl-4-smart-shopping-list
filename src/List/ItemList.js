@@ -22,7 +22,6 @@ const Items = props => {
 
   const handleChange = e => {
     setFilterInput(e.target.value);
-    console.log(filterInput);
   };
 
   const clearValues = e => {
