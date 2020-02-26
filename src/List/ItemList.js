@@ -1,10 +1,13 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
+import Modal from "../Modal/Modal";
 
 const Items = props => {
   const { setdbItems, token, dbItems, onEnterToken } = props;
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -43,14 +46,33 @@ const Items = props => {
 
   // delete list item
   const handleDelete = e => {
+    setModal(true);
     let db = firebase.fb.firestore();
     db.collection(token)
       .doc(e.target.value)
-      .delete();
+      .delete()
+      .then(setDeleteConfirm(false), setModal(false));
   };
+
+  const handleDeleteConfirmation = e => {
+    setDeleteConfirm(true);
+  };
+
+  const handleCloseModal = () => {
+    setModal(false);
+  };
+
+  const deleteConfirmation = (
+    <Modal>
+      <p>Delete?</p>
+      <button onClick={() => handleDeleteConfirmation()}>Yes</button>
+      <button onClick={handleCloseModal}>No</button>
+    </Modal>
+  );
 
   return (
     <div>
+      {modal && deleteConfirmation}
       <input
         type="text"
         name="token"
