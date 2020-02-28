@@ -67,7 +67,7 @@ const Items = props => {
         type="text"
         name="filter"
         placeholder="search items"
-        onChange={handleChange}
+        onChange={handleFilterChange}
         value={filterInput}
       />
       <button onClick={clearValues}>X</button>
@@ -81,27 +81,26 @@ const Items = props => {
         </Fragment>
       ) : (
         <ul>
-  
-          {dbItems.
-           filter(item => 
+          {dbItems
+            .filter(item =>
               item.name.toLowerCase().includes(filterInput.toLowerCase())
-           )
-           .map((item, index) => {
-            return (
-              <li key={index}>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="isPurchased"
-                    checked={is24Hours(item)}
-                    onChange={e => handleChange(e)}
-                    value={item.name}
-                  />
-                  {item.name}
-                </label>
-              </li>
-            );
-          })}
+            )
+            .map((item, index) => {
+              return (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="isPurchased"
+                      checked={is24Hours(item)}
+                      onChange={e => handleChange(e)}
+                      value={item.name}
+                    />
+                    {item.name}
+                  </label>
+                </li>
+              );
+            })}
         </ul>
       )}
     </div>
