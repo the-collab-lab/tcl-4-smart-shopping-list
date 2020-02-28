@@ -20,7 +20,7 @@ const Items = props => {
     }
   }, [token, setdbItems, props]);
 
-  const handleChange = e => {
+  const handleFilterChange = e => {
     setFilterInput(e.target.value);
     console.log(filterInput);
   };
