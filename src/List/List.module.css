@@ -5,3 +5,8 @@
 .nonactive {
   background-color: #fbd490;
 }
+
+.listInput {
+  margin: 0 auto;
+  width: 15rem;
+}

@@ -1,10 +1,12 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { NavLink } from "react-router-dom";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
+import classes from "./List.module.css";
 
 const Items = props => {
   const { setdbItems, token, dbItems, onEnterToken } = props;
+  const [filterInput, setFilterInput] = useState("");
 
   useEffect(() => {
     if (token) {
@@ -41,8 +43,16 @@ const Items = props => {
     }
   };
 
+  const handleFilterChange = e => {
+    setFilterInput(e.target.value);
+  };
+
+  const clearValues = e => {
+    setFilterInput("");
+  };
+
   return (
-    <div>
+    <div className={classes.listInput}>
       <input
         type="text"
         name="token"
@@ -52,6 +62,16 @@ const Items = props => {
         }}
         value={token}
       />
+
+      <input
+        type="text"
+        name="filter"
+        placeholder="search items"
+        onChange={handleFilterChange}
+        value={filterInput}
+      />
+      <button onClick={clearValues}>X</button>
+
       {dbItems.length === 0 ? (
         <Fragment>
           <p>No List Found</p>
@@ -61,22 +81,26 @@ const Items = props => {
         </Fragment>
       ) : (
         <ul>
-          {dbItems.map((item, index) => {
-            return (
-              <li key={index}>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="isPurchased"
-                    checked={is24Hours(item)}
-                    onChange={e => handleChange(e)}
-                    value={item.name}
-                  />
-                  {item.name}
-                </label>
-              </li>
-            );
-          })}
+          {dbItems
+            .filter(item =>
+              item.name.toLowerCase().includes(filterInput.toLowerCase())
+            )
+            .map((item, index) => {
+              return (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="isPurchased"
+                      checked={is24Hours(item)}
+                      onChange={e => handleChange(e)}
+                      value={item.name}
+                    />
+                    {item.name}
+                  </label>
+                </li>
+              );
+            })}
         </ul>
       )}
     </div>
