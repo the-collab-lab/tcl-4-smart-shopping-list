@@ -4,10 +4,13 @@ import "firebase/firestore";
 import * as firebase from "../lib/firebase";
 import Modal from "../Modal/Modal";
 
+//this will be used to pass a promise around
+let resolve;
+
 const Items = props => {
   const { setdbItems, token, dbItems, onEnterToken } = props;
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
-  const [modal, setModal] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState();
 
   useEffect(() => {
     if (token) {
@@ -24,13 +27,12 @@ const Items = props => {
   }, [token, setdbItems, dbItems, props]);
 
   //This will update an item to include a purchase date
-  const handleChange = e => {
+  const handleMarkPurchased = e => {
     let datePurchased = new Date();
     let db = firebase.fb.firestore();
     db.collection(token)
       .doc(e.target.value)
       .update({ datePurchased });
-    console.log(dbItems);
   };
 
   const hours24 = 86400; //24 hours in seconds
@@ -39,40 +41,52 @@ const Items = props => {
     let newDay = new Date();
     if (item.datePurchased) {
       return newDay.getTime() / 1000 - item.datePurchased.seconds < hours24;
-    } else {
-      return false;
     }
+    return false;
+  };
+
+  //handling the confirmation for deleting an item
+  const handleCancel = () => {
+    setIsOpen(false);
+    resolve(false);
+  };
+
+  const handleConfirm = () => {
+    setIsOpen(false);
+    resolve(true);
+  };
+
+  const show = () => {
+    setIsOpen(true);
+    return new Promise(res => {
+      resolve = res;
+    });
   };
 
   // delete list item
-  const handleDelete = e => {
-    setModal(true);
-    let db = firebase.fb.firestore();
-    db.collection(token)
-      .doc(e.target.value)
-      .delete()
-      .then(setDeleteConfirm(false), setModal(false));
-  };
-
-  const handleDeleteConfirmation = e => {
-    setDeleteConfirm(true);
-  };
-
-  const handleCloseModal = () => {
-    setModal(false);
-  };
+  async function handleDelete(e) {
+    setItemToDelete(e.target.value);
+    e.persist();
+    const result = await show();
+    if (result) {
+      let db = firebase.fb.firestore();
+      db.collection(token)
+        .doc(e.target.value)
+        .delete();
+    }
+  }
 
   const deleteConfirmation = (
     <Modal>
-      <p>Delete?</p>
-      <button onClick={() => handleDeleteConfirmation()}>Yes</button>
-      <button onClick={handleCloseModal}>No</button>
+      <p>Delete {itemToDelete}?</p>
+      <button onClick={() => handleConfirm()}>OK</button>
+      <button onClick={handleCancel}>Cancel</button>
     </Modal>
   );
 
   return (
     <div>
-      {modal && deleteConfirmation}
+      {isOpen && deleteConfirmation}
       <input
         type="text"
         name="token"
@@ -99,7 +113,7 @@ const Items = props => {
                     type="checkbox"
                     name="isPurchased"
                     checked={is24Hours(item)}
-                    onChange={e => handleChange(e)}
+                    onChange={e => handleMarkPurchased(e)}
                     value={item.name}
                   />
                   {item.name}

@@ -17,24 +17,11 @@
   border: 1px solid #888;
   width: 60%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  -webkit-animation-name: animatetop;
-  -webkit-animation-duration: 0.4s;
   animation-name: animatetop;
   animation-duration: 0.4s;
   display: flex;
   flex-flow: column;
   border-radius: 10px;
-}
-
-@-webkit-keyframes animatetop {
-  from {
-    top: -300px;
-    opacity: 0;
-  }
-  to {
-    top: 0;
-    opacity: 1;
-  }
 }
 
 @keyframes animatetop {
@@ -46,29 +33,4 @@
     top: 0;
     opacity: 1;
   }
-}
-
-.close {
-  color: rgb(96, 96, 96);
-  float: left;
-  font-size: 55px;
-  font-weight: light;
-  padding-left: 10px;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.modal-header {
-  color: rgb(57, 57, 57);
-  text-align: center;
-}
-
-.modal-body {
-  padding: 20px 16px;
-  background-color: #e4e3e3;
 }
