@@ -1,3 +1,4 @@
+
 import React, { useEffect, Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "firebase/firestore";
@@ -11,6 +12,8 @@ const Items = props => {
   const { setdbItems, token, dbItems, onEnterToken } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState();
+  const [filterInput, setFilterInput] = useState("");
+
 
   useEffect(() => {
     if (token) {
@@ -84,8 +87,16 @@ const Items = props => {
     </Modal>
   );
 
+    const handleFilterChange = e => {
+    setFilterInput(e.target.value);
+  };
+
+  const clearValues = e => {
+    setFilterInput("");
+  };
+
   return (
-    <div>
+    <div className={classes.listInput}>
       {isOpen && deleteConfirmation}
       <input
         type="text"
@@ -96,6 +107,16 @@ const Items = props => {
         }}
         value={token}
       />
+
+      <input
+        type="text"
+        name="filter"
+        placeholder="search items"
+        onChange={handleFilterChange}
+        value={filterInput}
+      />
+      <button onClick={clearValues}>X</button>
+
       {dbItems.length === 0 ? (
         <Fragment>
           <p>No List Found</p>
@@ -105,25 +126,30 @@ const Items = props => {
         </Fragment>
       ) : (
         <ul>
-          {dbItems.map((item, index) => {
-            return (
-              <li key={index}>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="isPurchased"
-                    checked={is24Hours(item)}
-                    onChange={e => handleMarkPurchased(e)}
-                    value={item.name}
-                  />
-                  {item.name}
-                  <button onClick={e => handleDelete(e)} value={item.name}>
+          {dbItems
+            .filter(item =>
+              item.name.toLowerCase().includes(filterInput.toLowerCase())
+            )
+            .map((item, index) => {
+              return (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="isPurchased"
+                      checked={is24Hours(item)}
+                      onChange={e => handleMarkPurchased(e)}
+                      value={item.name}
+                    />
+                    {item.name}
+                    <button onClick={e => handleDelete(e)} value={item.name}>
                     X{" "}
                   </button>
-                </label>
-              </li>
-            );
-          })}
+                  </label>
+                </li>
+              );
+            })}
+
         </ul>
       )}
     </div>
