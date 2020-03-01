@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
 import classes from "./List.module.css";
+import calculateEstimate from "../estimates";
+import dayjs from "dayjs";
 
 const Items = props => {
   const { setdbItems, token, dbItems, onEnterToken } = props;
@@ -22,14 +24,31 @@ const Items = props => {
     }
   }, [token, setdbItems, dbItems, props]);
 
-  //This will update an item to include a purchase date
-  const handleChange = e => {
-    let datePurchased = new Date();
-    let db = firebase.fb.firestore();
-    db.collection(token)
-      .doc(e.target.value)
-      .update({ datePurchased });
-    console.log(dbItems);
+  //This checks if a purchase date already exists, and if so updates the # of purchases, days between purchases and updates date purchased with most recent
+  const handleChange = (e, item) => {
+    if (item.datePurchased) {
+      let lastDatePurchased = item.datePurchased;
+      let datePurchased = new Date();
+      let datePurchasedInSeconds = Math.floor(datePurchased.getTime() / 1000);
+      let latestInterval = Math.floor(
+        (datePurchasedInSeconds - lastDatePurchased.seconds) / 86400
+      );
+      console.log(latestInterval);
+      let db = firebase.fb.firestore();
+      db.collection(token)
+        .doc(e.target.value)
+        .update({
+          datePurchased,
+          numOfPurchases: item.numOfPurchases + 1,
+          latestInterval
+        });
+    } else {
+      let datePurchased = new Date();
+      let db = firebase.fb.firestore();
+      db.collection(token)
+        .doc(e.target.value)
+        .update({ datePurchased, numOfPurchases: item.numOfPurchases + 1 });
+    }
   };
 
   const hours24 = 86400; //24 hours in seconds
@@ -93,7 +112,7 @@ const Items = props => {
                       type="checkbox"
                       name="isPurchased"
                       checked={is24Hours(item)}
-                      onChange={e => handleChange(e)}
+                      onChange={e => handleChange(e, item)}
                       value={item.name}
                     />
                     {item.name}
