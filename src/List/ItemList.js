@@ -1,4 +1,3 @@
-
 import React, { useEffect, Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "firebase/firestore";
@@ -13,7 +12,6 @@ const Items = props => {
   const [isOpen, setIsOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState();
   const [filterInput, setFilterInput] = useState("");
-
 
   useEffect(() => {
     if (token) {
@@ -87,7 +85,7 @@ const Items = props => {
     </Modal>
   );
 
-    const handleFilterChange = e => {
+  const handleFilterChange = e => {
     setFilterInput(e.target.value);
   };
 
@@ -96,7 +94,7 @@ const Items = props => {
   };
 
   return (
-    <div className={classes.listInput}>
+    <div>
       {isOpen && deleteConfirmation}
       <input
         type="text"
@@ -143,13 +141,12 @@ const Items = props => {
                     />
                     {item.name}
                     <button onClick={e => handleDelete(e)} value={item.name}>
-                    X{" "}
-                  </button>
+                      X{" "}
+                    </button>
                   </label>
                 </li>
               );
             })}
-
         </ul>
       )}
     </div>
