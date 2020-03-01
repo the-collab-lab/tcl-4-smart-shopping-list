@@ -1,11 +1,16 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
-import classes from "./List.module.css";
+import Modal from "../Modal/Modal";
+
+//this will be used to pass a promise around
+let resolve;
 
 const Items = props => {
   const { setdbItems, token, dbItems, onEnterToken } = props;
+  const [isOpen, setIsOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState();
   const [filterInput, setFilterInput] = useState("");
 
   useEffect(() => {
@@ -23,13 +28,12 @@ const Items = props => {
   }, [token, setdbItems, dbItems, props]);
 
   //This will update an item to include a purchase date
-  const handleChange = e => {
+  const handleMarkPurchased = e => {
     let datePurchased = new Date();
     let db = firebase.fb.firestore();
     db.collection(token)
       .doc(e.target.value)
       .update({ datePurchased });
-    console.log(dbItems);
   };
 
   const hours24 = 86400; //24 hours in seconds
@@ -38,10 +42,48 @@ const Items = props => {
     let newDay = new Date();
     if (item.datePurchased) {
       return newDay.getTime() / 1000 - item.datePurchased.seconds < hours24;
-    } else {
-      return false;
     }
+    return false;
   };
+
+  //handling the confirmation for deleting an item
+  const handleCancel = () => {
+    setIsOpen(false);
+    resolve(false);
+  };
+
+  const handleConfirm = () => {
+    setIsOpen(false);
+    resolve(true);
+  };
+
+  const show = () => {
+    setIsOpen(true);
+    return new Promise(res => {
+      resolve = res;
+    });
+  };
+
+  // delete list item
+  async function handleDelete(e) {
+    setItemToDelete(e.target.value);
+    e.persist();
+    const result = await show();
+    if (result) {
+      let db = firebase.fb.firestore();
+      db.collection(token)
+        .doc(e.target.value)
+        .delete();
+    }
+  }
+
+  const deleteConfirmation = (
+    <Modal>
+      <p>Delete {itemToDelete}?</p>
+      <button onClick={() => handleConfirm()}>OK</button>
+      <button onClick={handleCancel}>Cancel</button>
+    </Modal>
+  );
 
   const handleFilterChange = e => {
     setFilterInput(e.target.value);
@@ -52,7 +94,8 @@ const Items = props => {
   };
 
   return (
-    <div className={classes.listInput}>
+    <div>
+      {isOpen && deleteConfirmation}
       <input
         type="text"
         name="token"
@@ -93,10 +136,13 @@ const Items = props => {
                       type="checkbox"
                       name="isPurchased"
                       checked={is24Hours(item)}
-                      onChange={e => handleChange(e)}
+                      onChange={e => handleMarkPurchased(e)}
                       value={item.name}
                     />
                     {item.name}
+                    <button onClick={e => handleDelete(e)} value={item.name}>
+                      X{" "}
+                    </button>
                   </label>
                 </li>
               );
