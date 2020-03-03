@@ -4,11 +4,11 @@ import "firebase/firestore";
 import * as firebase from "../lib/firebase";
 import classes from "./List.module.css";
 import calculateEstimate from "../estimates";
-import dayjs from "dayjs";
 
 const Items = props => {
   const { setdbItems, token, dbItems, onEnterToken } = props;
   const [filterInput, setFilterInput] = useState("");
+  const HOURS24 = 86400; //24 hours in seconds
 
   useEffect(() => {
     if (token) {
@@ -24,23 +24,33 @@ const Items = props => {
     }
   }, [token, setdbItems, dbItems, props]);
 
-  //This checks if a purchase date already exists, and if so updates the # of purchases, days between purchases and updates date purchased with most recent
+  // Checks if a purchase date already exists - if not, creates a purchased date and increments # of purchases - if so, also sets the most recent purchase estimate, the most recent purchase interval and the calculated date of the next purchase
   const handleChange = (e, item) => {
     if (item.datePurchased) {
+      let lastEstimate;
+      item.nextPurchaseDate
+        ? (lastEstimate = item.nextPurchaseDate)
+        : (lastEstimate = item.frequency);
       let lastDatePurchased = item.datePurchased;
       let datePurchased = new Date();
       let datePurchasedInSeconds = Math.floor(datePurchased.getTime() / 1000);
       let latestInterval = Math.floor(
-        (datePurchasedInSeconds - lastDatePurchased.seconds) / 86400
+        (datePurchasedInSeconds - lastDatePurchased.seconds) / HOURS24
       );
-      console.log(latestInterval);
       let db = firebase.fb.firestore();
+      let nextPurchaseDate = calculateEstimate(
+        item.lastEstimate,
+        latestInterval,
+        item.numOfPurchases
+      );
       db.collection(token)
         .doc(e.target.value)
         .update({
           datePurchased,
           numOfPurchases: item.numOfPurchases + 1,
-          latestInterval
+          latestInterval,
+          lastEstimate,
+          nextPurchaseDate
         });
     } else {
       let datePurchased = new Date();
@@ -51,12 +61,11 @@ const Items = props => {
     }
   };
 
-  const hours24 = 86400; //24 hours in seconds
   //A checked box will remain true for 24 hours
   const is24Hours = item => {
     let newDay = new Date();
     if (item.datePurchased) {
-      return newDay.getTime() / 1000 - item.datePurchased.seconds < hours24;
+      return newDay.getTime() / 1000 - item.datePurchased.seconds < HOURS24;
     } else {
       return false;
     }
