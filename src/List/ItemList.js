@@ -12,6 +12,7 @@ const Items = props => {
   const [isOpen, setIsOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState();
   const [filterInput, setFilterInput] = useState("");
+  const [isViewDetailOpen, setViewDetailOpen] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -93,9 +94,26 @@ const Items = props => {
     setFilterInput("");
   };
 
+  // show/view detail modal function
+  const showDetails = () => {
+    setViewDetailOpen(true);
+  };
+
+  const hideDetails = () => {
+    setViewDetailOpen(false);
+  };
+
+  const handleDetails = (
+    <Modal>
+      <p> Item: test</p>
+      <button onClick={hideDetails}>Close</button>
+    </Modal>
+  );
+
   return (
     <div>
       {isOpen && deleteConfirmation}
+      {isViewDetailOpen && handleDetails}
       <input
         type="text"
         name="token"
@@ -139,7 +157,12 @@ const Items = props => {
                       onChange={e => handleMarkPurchased(e)}
                       value={item.name}
                     />
-                    {item.name}
+
+                    <div>
+                      {item.name}
+                      <button onClick={showDetails}> View Details </button>
+                    </div>
+
                     <button onClick={e => handleDelete(e)} value={item.name}>
                       X{" "}
                     </button>
