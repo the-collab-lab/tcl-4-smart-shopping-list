@@ -46,6 +46,149 @@ const Items = props => {
     return false;
   };
 
+  //update the item.nextPurchaseDate to whole integer
+
+  const buySoon = (
+    <div>
+      <h1>Buy Soon </h1>
+      <ul>
+        {dbItems
+          .filter(item =>
+            item.name.toLowerCase().includes(filterInput.toLowerCase())
+          )
+          .map((item, index) => {
+            // if estimate next purchase date < 7 return here
+            if (item.nextPurchaseDate < 7) {
+              return (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="isPurchased"
+                      checked={is24Hours(item)}
+                      onChange={e => handleMarkPurchased(e)}
+                      value={item.name}
+                    />
+                    {item.name}
+                    <button onClick={e => handleDelete(e)} value={item.name}>
+                      X{" "}
+                    </button>
+                  </label>
+                </li>
+              );
+            }
+          })}
+      </ul>
+    </div>
+  );
+
+  const buyKindaSoon = (
+    <div>
+      <h1>Buy Kinda Soon </h1>
+      <ul>
+        {dbItems
+          .filter(item =>
+            item.name.toLowerCase().includes(filterInput.toLowerCase())
+          )
+          .map((item, index) => {
+            if (item.nextPurchaseDate >= 7 && item.nextPurchaseDate <= 30) {
+              return (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="isPurchased"
+                      checked={is24Hours(item)}
+                      onChange={e => handleMarkPurchased(e)}
+                      value={item.name}
+                    />
+                    {item.name}
+                    <button onClick={e => handleDelete(e)} value={item.name}>
+                      X{" "}
+                    </button>
+                  </label>
+                </li>
+              );
+            }
+          })}
+      </ul>
+    </div>
+  );
+
+  const buyNotSoSoon = (
+    <div>
+      <h1>Buy Not Soon </h1>
+      <ul>
+        {dbItems
+          .filter(item =>
+            item.name.toLowerCase().includes(filterInput.toLowerCase())
+          )
+          .map((item, index) => {
+            // if estimate next purchase date < 7 return here
+            if (item.nextPurchaseDate < 30) {
+              return (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="isPurchased"
+                      checked={is24Hours(item)}
+                      onChange={e => handleMarkPurchased(e)}
+                      value={item.name}
+                    />
+                    {item.name}
+                    <button onClick={e => handleDelete(e)} value={item.name}>
+                      X{" "}
+                    </button>
+                  </label>
+                </li>
+              );
+            }
+          })}
+      </ul>
+    </div>
+  );
+
+  const inactive = (
+    <div>
+      <h1>Buy Kinda Soon </h1>
+      <ul>
+        {dbItems
+          .filter(item =>
+            item.name.toLowerCase().includes(filterInput.toLowerCase())
+          )
+          .map((item, index) => {
+            let today = new Date();
+            let todayInSec = today.getTime() / 1000;
+            // if (today.seconds > (item.nextPurhaseDate * hours24 + item.datePurchased.seconds) * 2)
+            //date purchased.seconds * hours24 * nextPurchaseDate
+            if (
+              todayInSec >
+              (item.nextPurchaseDate * hours24 + item.datePurchased.seconds) * 2
+            ) {
+              return (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="isPurchased"
+                      checked={is24Hours(item)}
+                      onChange={e => handleMarkPurchased(e)}
+                      value={item.name}
+                    />
+                    {item.name}
+                    <button onClick={e => handleDelete(e)} value={item.name}>
+                      X{" "}
+                    </button>
+                  </label>
+                </li>
+              );
+            }
+          })}
+      </ul>
+    </div>
+  );
+
   //handling the confirmation for deleting an item
   const handleCancel = () => {
     setIsOpen(false);
@@ -123,34 +266,16 @@ const Items = props => {
           </NavLink>
         </Fragment>
       ) : (
-        <ul>
-          {dbItems
-            .filter(item =>
-              item.name.toLowerCase().includes(filterInput.toLowerCase())
-            )
-            .map((item, index) => {
-              return (
-                <li key={index}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      name="isPurchased"
-                      checked={is24Hours(item)}
-                      onChange={e => handleMarkPurchased(e)}
-                      value={item.name}
-                    />
-                    {item.name}
-                    <button onClick={e => handleDelete(e)} value={item.name}>
-                      X{" "}
-                    </button>
-                  </label>
-                </li>
-              );
-            })}
-        </ul>
+        //Can these be chained in the same brackets?
+        { buySoon, buyKindaSoon, buyNotSoSoon, inactive }
       )}
     </div>
   );
 };
 
 export default Items;
+
+// ideas for tomorrow:
+//1. creating another component and using props
+//2. styling: headers, background colors.
+//3. screen readers: how should we render the different lists?
