@@ -31,52 +31,55 @@ const Items = props => {
     }
   }, [token, setdbItems, dbItems, props]);
 
-
   /* Checks if a purchase date already exists - if not, creates a purchased date and increments # of purchases - 
   if so, also sets the most recent purchase estimate, 
   the most recent purchase interval and the calculated date of the next purchase */
-  
-  const handleChange = (e, item) => {
+
+  const handleMarkPurchased = (e, item) => {
+    console.log(item);
+    let datePurchased = new Date();
+    let db = firebase.fb.firestore();
+    db.collection(token)
+      .doc(e.target.value)
+      .update({ datePurchased, numOfPurchases: item.numOfPurchases + 1 });
     if (item.datePurchased) {
-      let lastEstimate;
-      item.nextPurchaseDate
-        ? (lastEstimate = item.nextPurchaseDate)
-        : (lastEstimate = item.frequency);
-      let lastDatePurchased = item.datePurchased;
-      let datePurchased = new Date();
-      let datePurchasedInSeconds = Math.floor(datePurchased.getTime() / 1000);
-      let latestInterval = Math.floor(
-        (datePurchasedInSeconds - lastDatePurchased.seconds) / HOURS24
-      );
-      let db = firebase.fb.firestore();
-      let nextPurchaseDate = calculateEstimate(
-        item.lastEstimate,
-        latestInterval,
-        item.numOfPurchases
-      );
-      db.collection(token)
-        .doc(e.target.value)
-        .update({
-          datePurchased,
-          numOfPurchases: item.numOfPurchases + 1,
-          latestInterval,
-          lastEstimate,
-          nextPurchaseDate
-        });
-    } else {
-      let datePurchased = new Date();
-      let db = firebase.fb.firestore();
-      db.collection(token)
-        .doc(e.target.value)
-        .update({ datePurchased, numOfPurchases: item.numOfPurchases + 1 });
+      handleNextPurchaseEstimate(e, item);
     }
+  };
+
+  const handleNextPurchaseEstimate = (e, item) => {
+    let lastEstimate;
+    item.nextPurchaseDate
+      ? (lastEstimate = item.nextPurchaseDate)
+      : (lastEstimate = item.frequency);
+    let lastDatePurchased = item.datePurchased;
+    let datePurchased = new Date();
+    let datePurchasedInSeconds = Math.floor(datePurchased.getTime() / 1000);
+    let latestInterval = Math.floor(
+      (datePurchasedInSeconds - lastDatePurchased.seconds) / HOURS24
+    );
+    let db = firebase.fb.firestore();
+    let nextPurchaseDate = calculateEstimate(
+      item.lastEstimate,
+      latestInterval,
+      item.numOfPurchases
+    );
+    db.collection(token)
+      .doc(e.target.value)
+      .update({
+        datePurchased,
+        numOfPurchases: item.numOfPurchases + 1,
+        latestInterval,
+        lastEstimate,
+        nextPurchaseDate
+      });
   };
 
   //A checked box will remain true for 24 hours
   const is24Hours = item => {
     let newDay = new Date();
     if (item.datePurchased) {
-      return newDay.getTime() / 1000 - item.datePurchased.seconds < HOURS24;
+      return newDay.getTime() / 1000 - item.datePurchased.seconds < 5;
     } else {
       return false;
     }
@@ -86,15 +89,28 @@ const Items = props => {
 
   const buySoon = (
     <div>
-      <h1>Buy Soon </h1>
+      <h1 className={classes.buySoon}>Buy Soon </h1>
       <ul>
         {dbItems
-          .filter(item =>
-            item.name.toLowerCase().includes(filterInput.toLowerCase())
-          )
+          .filter(item => {
+            if (item.name !== undefined) {
+              return item.name
+                .toLowerCase()
+                .includes(filterInput.toLowerCase());
+            }
+          })
+          .sort((itemA, itemB) => {
+            let comparison = 0;
+            if (itemA.nextPurchaseDate > itemB.nextPurchaseDate) {
+              comparison = 1;
+            } else if (itemA.nextPurchaseDate < itemB.nextPurchaseDate) {
+              comparison = -1;
+            }
+            return comparison;
+          })
           .map((item, index) => {
             // if estimate next purchase date < 7 return here
-            if (item.nextPurchaseDate < 7) {
+            if ((item.nextPurchaseDate || item.frequency) < 7) {
               return (
                 <li key={index}>
                   <label>
@@ -102,7 +118,7 @@ const Items = props => {
                       type="checkbox"
                       name="isPurchased"
                       checked={is24Hours(item)}
-                      onChange={e => handleMarkPurchased(e)}
+                      onChange={e => handleMarkPurchased(e, item)}
                       value={item.name}
                     />
                     {item.name}
@@ -120,14 +136,21 @@ const Items = props => {
 
   const buyKindaSoon = (
     <div>
-      <h1>Buy Kinda Soon </h1>
+      <h1 className={classes.buyKindaSoon}>Buy Kinda Soon </h1>
       <ul>
         {dbItems
-          .filter(item =>
-            item.name.toLowerCase().includes(filterInput.toLowerCase())
-          )
+          .filter(item => {
+            if (item.name !== undefined) {
+              return item.name
+                .toLowerCase()
+                .includes(filterInput.toLowerCase());
+            }
+          })
           .map((item, index) => {
-            if (item.nextPurchaseDate >= 7 && item.nextPurchaseDate <= 30) {
+            if (
+              (item.nextPurchaseDate || item.frequency) >= 7 &&
+              (item.nextPurchaseDate || item.frequency) < 30
+            ) {
               return (
                 <li key={index}>
                   <label>
@@ -135,7 +158,7 @@ const Items = props => {
                       type="checkbox"
                       name="isPurchased"
                       checked={is24Hours(item)}
-                      onChange={e => handleMarkPurchased(e)}
+                      onChange={e => handleMarkPurchased(e, item)}
                       value={item.name}
                     />
                     {item.name}
@@ -153,15 +176,19 @@ const Items = props => {
 
   const buyNotSoSoon = (
     <div>
-      <h1>Buy Not Soon </h1>
+      <h1 className={classes.buyNotSoon}>Buy Not Soon </h1>
       <ul>
         {dbItems
-          .filter(item =>
-            item.name.toLowerCase().includes(filterInput.toLowerCase())
-          )
+          .filter(item => {
+            if (item.name !== undefined) {
+              return item.name
+                .toLowerCase()
+                .includes(filterInput.toLowerCase());
+            }
+          })
           .map((item, index) => {
             // if estimate next purchase date < 7 return here
-            if (item.nextPurchaseDate < 30) {
+            if ((item.nextPurchaseDate || item.frequency) >= 30) {
               return (
                 <li key={index}>
                   <label>
@@ -169,7 +196,7 @@ const Items = props => {
                       type="checkbox"
                       name="isPurchased"
                       checked={is24Hours(item)}
-                      onChange={e => handleMarkPurchased(e)}
+                      onChange={e => handleMarkPurchased(e, item)}
                       value={item.name}
                     />
                     {item.name}
@@ -187,38 +214,46 @@ const Items = props => {
 
   const inactive = (
     <div>
-      <h1>Buy Kinda Soon </h1>
+      <h1 className={classes.inactive}>Inactive</h1>
       <ul>
         {dbItems
-          .filter(item =>
-            item.name.toLowerCase().includes(filterInput.toLowerCase())
-          )
+          .filter(item => {
+            if (item.name !== undefined) {
+              return item.name
+                .toLowerCase()
+                .includes(filterInput.toLowerCase());
+            }
+          })
+          .sort()
           .map((item, index) => {
             let today = new Date();
             let todayInSec = today.getTime() / 1000;
             // if (today.seconds > (item.nextPurhaseDate * hours24 + item.datePurchased.seconds) * 2)
             //date purchased.seconds * hours24 * nextPurchaseDate
-            if (
-              todayInSec >
-              (item.nextPurchaseDate * hours24 + item.datePurchased.seconds) * 2
-            ) {
-              return (
-                <li key={index}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      name="isPurchased"
-                      checked={is24Hours(item)}
-                      onChange={e => handleMarkPurchased(e)}
-                      value={item.name}
-                    />
-                    {item.name}
-                    <button onClick={e => handleDelete(e)} value={item.name}>
-                      X{" "}
-                    </button>
-                  </label>
-                </li>
-              );
+            if (item.datePurchased) {
+              if (
+                todayInSec >
+                (item.nextPurchaseDate * HOURS24 + item.datePurchased.seconds) *
+                  2
+              ) {
+                return (
+                  <li key={index}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="isPurchased"
+                        checked={is24Hours(item)}
+                        onChange={e => handleMarkPurchased(e, item)}
+                        value={item.name}
+                      />
+                      {item.name}
+                      <button onClick={e => handleDelete(e)} value={item.name}>
+                        X{" "}
+                      </button>
+                    </label>
+                  </li>
+                );
+              }
             }
           })}
       </ul>
@@ -303,7 +338,12 @@ const Items = props => {
         </Fragment>
       ) : (
         //Can these be chained in the same brackets?
-        { buySoon, buyKindaSoon, buyNotSoSoon, inactive }
+        <div>
+          {buySoon}
+          {buyKindaSoon}
+          {buyNotSoSoon}
+          {inactive}
+        </div>
       )}
     </div>
   );

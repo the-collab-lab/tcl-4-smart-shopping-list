@@ -10,3 +10,19 @@
   margin: 0 auto;
   width: 15rem;
 }
+
+.buySoon {
+  background: red;
+}
+
+.buyNotSoon {
+  background: yellow;
+}
+
+.buyKindaSoon {
+  background: orange;
+}
+
+.inactive {
+  background: grey;
+}
