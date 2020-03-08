@@ -125,8 +125,13 @@ const Items = props => {
                       value={item.name}
                     />
                     {item.name}
-                    <button onClick={e => handleDelete(e)} value={item.name}>
-                      X{" "}
+                    <button
+                      role="button"
+                      arialabel="delete item"
+                      onClick={e => handleDelete(e)}
+                      value={item.name}
+                    >
+                      Delete Item{" "}
                     </button>
                   </label>
                 </li>
