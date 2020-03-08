@@ -1,12 +1,19 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
+
 import classes from "./List.module.css";
 import calculateEstimate from "../estimates";
+import Modal from "../Modal/Modal";
+
+//this will be used to pass a promise around
+let resolve;
 
 const Items = props => {
   const { setdbItems, token, dbItems, onEnterToken } = props;
+  const [isOpen, setIsOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState();
   const [filterInput, setFilterInput] = useState("");
   const HOURS24 = 86400; //24 hours in seconds
 
@@ -24,7 +31,11 @@ const Items = props => {
     }
   }, [token, setdbItems, dbItems, props]);
 
-  // Checks if a purchase date already exists - if not, creates a purchased date and increments # of purchases - if so, also sets the most recent purchase estimate, the most recent purchase interval and the calculated date of the next purchase
+
+  /* Checks if a purchase date already exists - if not, creates a purchased date and increments # of purchases - 
+  if so, also sets the most recent purchase estimate, 
+  the most recent purchase interval and the calculated date of the next purchase */
+  
   const handleChange = (e, item) => {
     if (item.datePurchased) {
       let lastEstimate;
@@ -71,6 +82,45 @@ const Items = props => {
     }
   };
 
+  //handling the confirmation for deleting an item
+  const handleCancel = () => {
+    setIsOpen(false);
+    resolve(false);
+  };
+
+  const handleConfirm = () => {
+    setIsOpen(false);
+    resolve(true);
+  };
+
+  const show = () => {
+    setIsOpen(true);
+    return new Promise(res => {
+      resolve = res;
+    });
+  };
+
+  // delete list item
+  async function handleDelete(e) {
+    setItemToDelete(e.target.value);
+    e.persist();
+    const result = await show();
+    if (result) {
+      let db = firebase.fb.firestore();
+      db.collection(token)
+        .doc(e.target.value)
+        .delete();
+    }
+  }
+
+  const deleteConfirmation = (
+    <Modal>
+      <p>Delete {itemToDelete}?</p>
+      <button onClick={() => handleConfirm()}>OK</button>
+      <button onClick={handleCancel}>Cancel</button>
+    </Modal>
+  );
+
   const handleFilterChange = e => {
     setFilterInput(e.target.value);
   };
@@ -80,7 +130,8 @@ const Items = props => {
   };
 
   return (
-    <div className={classes.listInput}>
+    <div>
+      {isOpen && deleteConfirmation}
       <input
         type="text"
         name="token"
@@ -122,9 +173,12 @@ const Items = props => {
                       name="isPurchased"
                       checked={is24Hours(item)}
                       onChange={e => handleChange(e, item)}
-                      value={item.name}
+                        value={item.name}
                     />
                     {item.name}
+                    <button onClick={e => handleDelete(e)} value={item.name}>
+                      X{" "}
+                    </button>
                   </label>
                 </li>
               );
