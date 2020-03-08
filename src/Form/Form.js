@@ -7,6 +7,8 @@ const Form = props => {
   const [name, setName] = useState("");
   const [frequency, setFrequency] = useState(0);
   const [date, setDate] = useState("");
+  const [numOfPurchases] = useState(0);
+  const [lastEstimate] = useState(null);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -31,7 +33,9 @@ const Form = props => {
       let data = {
         name,
         frequency,
-        date
+        date,
+        numOfPurchases,
+        lastEstimate
       };
 
       //setting the doc id to match the item name so it's easier to find a match

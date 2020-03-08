@@ -2,6 +2,9 @@ import React, { useEffect, Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
+
+import classes from "./List.module.css";
+import calculateEstimate from "../estimates";
 import Modal from "../Modal/Modal";
 
 //this will be used to pass a promise around
@@ -12,6 +15,7 @@ const Items = props => {
   const [isOpen, setIsOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState();
   const [filterInput, setFilterInput] = useState("");
+  const HOURS24 = 86400; //24 hours in seconds
 
   useEffect(() => {
     if (token) {
@@ -27,23 +31,55 @@ const Items = props => {
     }
   }, [token, setdbItems, dbItems, props]);
 
-  //This will update an item to include a purchase date
-  const handleMarkPurchased = e => {
-    let datePurchased = new Date();
-    let db = firebase.fb.firestore();
-    db.collection(token)
-      .doc(e.target.value)
-      .update({ datePurchased });
+
+  /* Checks if a purchase date already exists - if not, creates a purchased date and increments # of purchases - 
+  if so, also sets the most recent purchase estimate, 
+  the most recent purchase interval and the calculated date of the next purchase */
+  
+  const handleChange = (e, item) => {
+    if (item.datePurchased) {
+      let lastEstimate;
+      item.nextPurchaseDate
+        ? (lastEstimate = item.nextPurchaseDate)
+        : (lastEstimate = item.frequency);
+      let lastDatePurchased = item.datePurchased;
+      let datePurchased = new Date();
+      let datePurchasedInSeconds = Math.floor(datePurchased.getTime() / 1000);
+      let latestInterval = Math.floor(
+        (datePurchasedInSeconds - lastDatePurchased.seconds) / HOURS24
+      );
+      let db = firebase.fb.firestore();
+      let nextPurchaseDate = calculateEstimate(
+        item.lastEstimate,
+        latestInterval,
+        item.numOfPurchases
+      );
+      db.collection(token)
+        .doc(e.target.value)
+        .update({
+          datePurchased,
+          numOfPurchases: item.numOfPurchases + 1,
+          latestInterval,
+          lastEstimate,
+          nextPurchaseDate
+        });
+    } else {
+      let datePurchased = new Date();
+      let db = firebase.fb.firestore();
+      db.collection(token)
+        .doc(e.target.value)
+        .update({ datePurchased, numOfPurchases: item.numOfPurchases + 1 });
+    }
   };
 
-  const hours24 = 86400; //24 hours in seconds
   //A checked box will remain true for 24 hours
   const is24Hours = item => {
     let newDay = new Date();
     if (item.datePurchased) {
-      return newDay.getTime() / 1000 - item.datePurchased.seconds < hours24;
+      return newDay.getTime() / 1000 - item.datePurchased.seconds < HOURS24;
+    } else {
+      return false;
     }
-    return false;
   };
 
   //handling the confirmation for deleting an item
@@ -136,8 +172,8 @@ const Items = props => {
                       type="checkbox"
                       name="isPurchased"
                       checked={is24Hours(item)}
-                      onChange={e => handleMarkPurchased(e)}
-                      value={item.name}
+                      onChange={e => handleChange(e, item)}
+                        value={item.name}
                     />
                     {item.name}
                     <button onClick={e => handleDelete(e)} value={item.name}>
