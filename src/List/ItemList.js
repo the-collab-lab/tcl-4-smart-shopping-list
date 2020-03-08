@@ -31,7 +31,8 @@ const Items = props => {
     }
   }, [token, setdbItems, dbItems, props]);
 
-  /* Checks if a purchase date already exists - if not, creates a purchased date and increments # of purchases - 
+  /* Checks if a purchase date already exists - 
+  if not, creates a purchased date and increments # of purchases - 
   if so, also sets the most recent purchase estimate, 
   the most recent purchase interval and the calculated date of the next purchase */
 
@@ -79,17 +80,28 @@ const Items = props => {
   const is24Hours = item => {
     let newDay = new Date();
     if (item.datePurchased) {
-      return newDay.getTime() / 1000 - item.datePurchased.seconds < 5;
+      return newDay.getTime() / 1000 - item.datePurchased.seconds < HOURS24;
     } else {
       return false;
     }
+  };
+
+  //comparison method for sorting by purchase date.
+  const comparison = (itemA, itemB) => {
+    let comparison = 0;
+    if (itemA.nextPurchaseDate > itemB.nextPurchaseDate) {
+      comparison = 1;
+    } else if (itemA.nextPurchaseDate < itemB.nextPurchaseDate) {
+      comparison = -1;
+    }
+    return comparison;
   };
 
   //update the item.nextPurchaseDate to whole integer
 
   const buySoon = (
     <div>
-      <h1 className={classes.buySoon}>Buy Soon </h1>
+      <h1 className={classes.buySoon}> Buy Soon </h1>
       <ul>
         {dbItems
           .filter(item => {
@@ -99,17 +111,8 @@ const Items = props => {
                 .includes(filterInput.toLowerCase());
             }
           })
-          .sort((itemA, itemB) => {
-            let comparison = 0;
-            if (itemA.nextPurchaseDate > itemB.nextPurchaseDate) {
-              comparison = 1;
-            } else if (itemA.nextPurchaseDate < itemB.nextPurchaseDate) {
-              comparison = -1;
-            }
-            return comparison;
-          })
+          .sort(comparison)
           .map((item, index) => {
-            // if estimate next purchase date < 7 return here
             if ((item.nextPurchaseDate || item.frequency) < 7) {
               return (
                 <li key={index}>
@@ -136,7 +139,7 @@ const Items = props => {
 
   const buyKindaSoon = (
     <div>
-      <h1 className={classes.buyKindaSoon}>Buy Kinda Soon </h1>
+      <h1 className={classes.buyKindaSoon}> Buy Kinda Soon </h1>
       <ul>
         {dbItems
           .filter(item => {
@@ -146,6 +149,7 @@ const Items = props => {
                 .includes(filterInput.toLowerCase());
             }
           })
+          .sort(comparison)
           .map((item, index) => {
             if (
               (item.nextPurchaseDate || item.frequency) >= 7 &&
@@ -186,8 +190,8 @@ const Items = props => {
                 .includes(filterInput.toLowerCase());
             }
           })
+          .sort(comparison)
           .map((item, index) => {
-            // if estimate next purchase date < 7 return here
             if ((item.nextPurchaseDate || item.frequency) >= 30) {
               return (
                 <li key={index}>
@@ -224,12 +228,10 @@ const Items = props => {
                 .includes(filterInput.toLowerCase());
             }
           })
-          .sort()
+          .sort(comparison)
           .map((item, index) => {
             let today = new Date();
             let todayInSec = today.getTime() / 1000;
-            // if (today.seconds > (item.nextPurhaseDate * hours24 + item.datePurchased.seconds) * 2)
-            //date purchased.seconds * hours24 * nextPurchaseDate
             if (item.datePurchased) {
               if (
                 todayInSec >
@@ -337,7 +339,6 @@ const Items = props => {
           </NavLink>
         </Fragment>
       ) : (
-        //Can these be chained in the same brackets?
         <div>
           {buySoon}
           {buyKindaSoon}
