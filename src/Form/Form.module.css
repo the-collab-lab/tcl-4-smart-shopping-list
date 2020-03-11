@@ -20,3 +20,8 @@
 .inputLabel {
   padding: 0 1rem;
 }
+
+.radioContainer {
+  display: flex;
+  justify-content: space-around;
+}

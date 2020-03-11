@@ -66,66 +66,74 @@ const Form = props => {
   return (
     <form className={classes.form} onSubmit={e => handleSubmit(e)}>
       <h3 className={classes.formTitle}>Add New Item</h3>
-      <input
-        className={classes.inputName}
-        type="text"
-        name="token"
-        placeholder="List Token"
-        value={token}
-        onChange={e => {
-          onEnterToken(e);
-        }}
-        required
-      />
-      <input
-        className={classes.inputName}
-        type="text"
-        name="name"
-        placeholder="Item Name"
-        value={name}
-        onChange={e => setName(e.target.value)}
-        required
-      />
-      <div>
-        <label className={classes.inputLabel}>
+      <div className="input-field">
+        <input
+          type="text"
+          name="token"
+          value={token}
+          onChange={e => {
+            onEnterToken(e);
+          }}
+          required
+        />
+        <label for="token">List Token</label>
+      </div>
+
+      <div className="input-field">
+        <input
+          type="text"
+          name="name"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          required
+        />
+        <label for="name">Name</label>
+      </div>
+
+      <div className={classes.radioContainer}>
+        <label>
           <input
-            className={classes.inputFrequency}
+            className="with-gap"
             type="radio"
             name="frequency"
             value="7"
             onChange={e => setFrequency(e.target.value)}
-          />{" "}
-          Soon
+          />
+          <span>Soon</span>
         </label>
-        <label className={classes.inputLabel}>
+        <label>
           <input
-            className={classes.inputFrequency}
+            className="with-gap"
             type="radio"
             name="frequency"
             value="14"
             onChange={e => setFrequency(e.target.value)}
-          />{" "}
-          Kind of Soon
+          />
+          <span>Kind of Soon</span>
         </label>
-        <label className={classes.inputLabel}>
+        <label>
           <input
-            className={classes.inputFrequency}
+            className="with-gap"
             type="radio"
             name="frequency"
             value="30"
             onChange={e => setFrequency(e.target.value)}
-          />{" "}
-          Not Soon
+          />
+          <span>Not Soon</span>
         </label>
       </div>
+
       <input
-        className={classes.inputDate}
+        className="datepicker"
         type="date"
         name="date"
         value={date}
         onChange={e => setDate(e.target.value)}
       />
-      <button>ADD</button>
+      <button className="btn waves-effect">
+        ADD
+        <i class="material-icons left">add</i>
+      </button>
     </form>
   );
 };
