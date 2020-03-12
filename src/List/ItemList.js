@@ -127,7 +127,7 @@ const Items = props => {
                     {item.name}
                     <button
                       role="button"
-                      arialabel="delete item"
+                      ariaLabel="delete item"
                       onClick={e => handleDelete(e)}
                       value={item.name}
                     >
