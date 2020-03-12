@@ -5,6 +5,7 @@ import * as firebase from "../lib/firebase";
 import Modal from "../Modal/Modal";
 import calculateEstimate from "../estimates";
 import { secondsToDate } from "../lib/secondsToDate";
+import classes from "./List.module.css";
 
 //this will be used to pass a promise around
 let resolve;
@@ -38,7 +39,11 @@ const Items = props => {
     }
   }, [token, setdbItems, dbItems, props]);
 
-  // Checks if a purchase date already exists - if not, creates a purchased date and increments # of purchases - if so, also sets the most recent purchase estimate, the most recent purchase interval and the calculated date of the next purchase
+
+  /* Checks if a purchase date already exists - if not, creates a purchased date and increments # of purchases - 
+  if so, also sets the most recent purchase estimate, 
+  the most recent purchase interval and the calculated date of the next purchase */
+  
   const handleChange = (e, item) => {
     if (item.datePurchased) {
       let lastEstimate;
@@ -163,6 +168,7 @@ const Items = props => {
     <div>
       {isOpen && deleteConfirmation}
       {isViewDetailOpen && handleDetails}
+
       <input
         type="text"
         name="token"
@@ -204,16 +210,15 @@ const Items = props => {
                       name="isPurchased"
                       checked={is24Hours(item)}
                       onChange={e => handleChange(e, item)}
-                      value={item.name}
+                        value={item.name}
                     />
-
                     <div>
                       {item.name}
                       <button onClick={e => showDetails(e, item)}>
                         View Details
                       </button>
                     </div>
-
+                    {item.name}
                     <button onClick={e => handleDelete(e)} value={item.name}>
                       X{" "}
                     </button>
