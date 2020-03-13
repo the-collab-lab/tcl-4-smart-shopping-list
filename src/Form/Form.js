@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import classes from "./Form.module.css";
 import * as firebase from "../lib/firebase";
+import grocery from "../img/greenGrocery.jpg";
 
 const Form = props => {
   const { setdbItems, dbItems, token, onEnterToken } = props;
@@ -65,7 +66,13 @@ const Form = props => {
 
   return (
     <form className={classes.form} onSubmit={e => handleSubmit(e)}>
-      <h3 className={classes.formTitle}>Add New Item</h3>
+      <div>
+        <img
+          className={classes.groceryImg}
+          src={grocery}
+          alt="A green grocery bag full of groceries with a recycling symbol on the front. "
+        />
+      </div>
       <div className="input-field">
         <input
           type="text"
@@ -87,39 +94,44 @@ const Form = props => {
           onChange={e => setName(e.target.value)}
           required
         />
-        <label for="name">Name</label>
+        <label for="name">Item Name</label>
       </div>
-
+      <div>
+        <h5>How soon do you want to buy this again?</h5>
+      </div>
       <div className={classes.radioContainer}>
         <label>
           <input
+            required
             className="with-gap"
             type="radio"
             name="frequency"
             value="7"
             onChange={e => setFrequency(e.target.value)}
           />
-          <span>Soon</span>
+          <span className={classes.soonColor}>Soon</span>
         </label>
         <label>
           <input
+            required
             className="with-gap"
             type="radio"
             name="frequency"
             value="14"
             onChange={e => setFrequency(e.target.value)}
           />
-          <span>Kind of Soon</span>
+          <span className={classes.kindOfSoonColor}>Kind of Soon</span>
         </label>
         <label>
           <input
+            required
             className="with-gap"
             type="radio"
             name="frequency"
             value="30"
             onChange={e => setFrequency(e.target.value)}
           />
-          <span>Not Soon</span>
+          <span className={classes.notSoonColor}>Not Soon</span>
         </label>
       </div>
 
@@ -130,7 +142,10 @@ const Form = props => {
         value={date}
         onChange={e => setDate(e.target.value)}
       />
-      <button className="btn waves-effect">
+      <button
+        id={classes.addButtonWidth}
+        className="btn waves-effect light-green darken-2"
+      >
         ADD
         <i class="material-icons left">add</i>
       </button>

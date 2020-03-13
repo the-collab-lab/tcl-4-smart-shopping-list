@@ -2,8 +2,10 @@
   display: flex;
   flex-direction: column;
   width: 40%;
+  height: 90vh;
   margin: auto;
   margin-bottom: 3rem;
+  justify-content: center;
 }
 
 .inputName,
@@ -24,4 +26,26 @@
 .radioContainer {
   display: flex;
   justify-content: space-around;
+  margin-bottom: 3rem;
+}
+
+.soonColor {
+  color: red;
+}
+
+.kindOfSoonColor {
+  color: orange;
+}
+
+.notSoonColor {
+  color: green;
+}
+
+#addButtonWidth {
+  width: 100px;
+  margin: 0 auto;
+}
+
+.groceryImg {
+  width: 200px;
 }
