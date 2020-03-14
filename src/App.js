@@ -60,7 +60,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header isAddSelected={isAddSelected} onListSelect={selectListHandler} />
+      {/* <Header isAddSelected={isAddSelected} onListSelect={selectListHandler} /> */}
       <div className="App">
         <Switch>
           <Route exact path="/">

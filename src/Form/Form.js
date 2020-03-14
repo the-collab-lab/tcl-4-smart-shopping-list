@@ -73,7 +73,8 @@ const Form = props => {
           alt="A green grocery bag full of groceries with a recycling symbol on the front. "
         />
       </div>
-      <div className="input-field">
+
+      {/* <div className="input-field">
         <input
           type="text"
           name="token"
@@ -84,7 +85,7 @@ const Form = props => {
           required
         />
         <label for="token">List Token</label>
-      </div>
+      </div> */}
 
       <div className="input-field">
         <input
@@ -135,13 +136,14 @@ const Form = props => {
         </label>
       </div>
 
-      <input
+      {/* <input
         className="datepicker"
         type="date"
         name="date"
         value={date}
         onChange={e => setDate(e.target.value)}
-      />
+      /> */}
+
       <button
         id={classes.addButtonWidth}
         className="btn waves-effect light-green darken-2"
