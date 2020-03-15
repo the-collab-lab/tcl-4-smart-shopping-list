@@ -87,13 +87,7 @@ const Items = props => {
 
   //comparison method for sorting by purchase date.
   const comparison = (itemA, itemB) => {
-    let comparison = 0;
-    if (itemA.nextPurchaseDate > itemB.nextPurchaseDate) {
-      comparison = 1;
-    } else if (itemA.nextPurchaseDate < itemB.nextPurchaseDate) {
-      comparison = -1;
-    }
-    return comparison;
+    return itemB.nextPurchaseDate - itemA.nextPurchaseDate;
   };
 
   // update the item.nextPurchaseDate to whole integer
