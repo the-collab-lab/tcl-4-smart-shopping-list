@@ -8,8 +8,6 @@ import getToken from "./lib/token";
 import Form from "./Form/Form";
 import * as firebase from "./lib/firebase";
 
-// heck spiky rake
-
 function App() {
   const [isListSelected, setIsListSelected] = useState(true);
   const [isAddSelected, setIsAddSelected] = useState(false);
@@ -62,7 +60,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header isAddSelected={isAddSelected} onListSelect={selectListHandler} />
       <div className="App">
         <Switch>
           <Route exact path="/">

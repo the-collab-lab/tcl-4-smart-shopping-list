@@ -2,6 +2,7 @@ import React, { useEffect, Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
+
 import Modal from "../Modal/Modal";
 import calculateEstimate from "../estimates";
 import { secondsToDate } from "../lib/secondsToDate";
@@ -39,11 +40,10 @@ const Items = props => {
     }
   }, [token, setdbItems, dbItems, props]);
 
-
-  /* Checks if a purchase date already exists - if not, creates a purchased date and increments # of purchases - 
-  if so, also sets the most recent purchase estimate, 
+  /* Checks if a purchase date already exists - if not, creates a purchased date and increments # of purchases -
+  if so, also sets the most recent purchase estimate,
   the most recent purchase interval and the calculated date of the next purchase */
-  
+
   const handleChange = (e, item) => {
     if (item.datePurchased) {
       let lastEstimate;
@@ -210,7 +210,7 @@ const Items = props => {
                       name="isPurchased"
                       checked={is24Hours(item)}
                       onChange={e => handleChange(e, item)}
-                        value={item.name}
+                      value={item.name}
                     />
                     <div>
                       {item.name}
