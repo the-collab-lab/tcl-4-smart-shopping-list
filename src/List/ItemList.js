@@ -2,8 +2,11 @@ import React, { useEffect, Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
-import calculateEstimate from "../estimates";
+
 import Modal from "../Modal/Modal";
+import calculateEstimate from "../estimates";
+import { secondsToDate } from "../lib/secondsToDate";
+import classes from "./List.module.css";
 
 //this will be used to pass a promise around
 let resolve;
@@ -13,6 +16,14 @@ const Items = props => {
   const [isOpen, setIsOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState();
   const [filterInput, setFilterInput] = useState("");
+  const [isViewDetailOpen, setViewDetailOpen] = useState(false);
+  const [itemToView, setItemToView] = useState({
+    datePurchased: {},
+    name: "",
+    nextPurchaseDate: 0,
+    numOfPurchases: 0
+  });
+
   const HOURS24 = 86400; //24 hours in seconds
 
   useEffect(() => {
@@ -74,9 +85,8 @@ const Items = props => {
     let newDay = new Date();
     if (item.datePurchased) {
       return newDay.getTime() / 1000 - item.datePurchased.seconds < HOURS24;
-    } else {
-      return false;
     }
+    return false;
   };
 
   //handling the confirmation for deleting an item
@@ -126,9 +136,39 @@ const Items = props => {
     setFilterInput("");
   };
 
+  const showDetails = (e, item) => {
+    setItemToView(item);
+    setViewDetailOpen(true);
+  };
+
+  const hideDetails = () => {
+    setViewDetailOpen(false);
+  };
+
+  const handleDetails = (
+    <Modal>
+      <p>Name: {itemToView.name}</p>
+      {itemToView.datePurchased && (
+        <p>
+          Date Purchased:{" "}
+          {secondsToDate(itemToView.datePurchased.seconds).toLocaleDateString()}
+        </p>
+      )}
+      {itemToView.nextPurchaseDate && (
+        <p>
+          Days Until Next Purchase: {Math.round(itemToView.nextPurchaseDate)}
+        </p>
+      )}
+      <p>Number of Purchases: {itemToView.numOfPurchases}</p>
+      <button onClick={hideDetails}>Close</button>
+    </Modal>
+  );
+
   return (
     <div>
       {isOpen && deleteConfirmation}
+      {isViewDetailOpen && handleDetails}
+
       <input
         type="text"
         name="token"
@@ -172,6 +212,12 @@ const Items = props => {
                       onChange={e => handleChange(e, item)}
                       value={item.name}
                     />
+                    <div>
+                      {item.name}
+                      <button onClick={e => showDetails(e, item)}>
+                        View Details
+                      </button>
+                    </div>
                     {item.name}
                     <button onClick={e => handleDelete(e)} value={item.name}>
                       X{" "}
