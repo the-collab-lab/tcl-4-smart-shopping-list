@@ -29,15 +29,15 @@
   margin-bottom: 3rem;
 }
 
-.soonColor {
+.frequencySoon {
   color: red;
 }
 
-.kindOfSoonColor {
+.frequencyKindOfSoon {
   color: orange;
 }
 
-.notSoonColor {
+.frequencyNotSoon {
   color: green;
 }
 

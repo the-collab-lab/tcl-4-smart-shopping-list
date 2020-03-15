@@ -74,19 +74,6 @@ const Form = props => {
         />
       </div>
 
-      {/* <div className="input-field">
-        <input
-          type="text"
-          name="token"
-          value={token}
-          onChange={e => {
-            onEnterToken(e);
-          }}
-          required
-        />
-        <label for="token">List Token</label>
-      </div> */}
-
       <div className="input-field">
         <input
           type="text"
@@ -110,7 +97,7 @@ const Form = props => {
             value="7"
             onChange={e => setFrequency(e.target.value)}
           />
-          <span className={classes.soonColor}>Soon</span>
+          <span className={classes.frequencySoon}>Soon</span>
         </label>
         <label>
           <input
@@ -121,7 +108,7 @@ const Form = props => {
             value="14"
             onChange={e => setFrequency(e.target.value)}
           />
-          <span className={classes.kindOfSoonColor}>Kind of Soon</span>
+          <span className={classes.frequencyKindOfSoon}>Kind of Soon</span>
         </label>
         <label>
           <input
@@ -132,17 +119,9 @@ const Form = props => {
             value="30"
             onChange={e => setFrequency(e.target.value)}
           />
-          <span className={classes.notSoonColor}>Not Soon</span>
+          <span className={classes.frequencyNotSoon}>Not Soon</span>
         </label>
       </div>
-
-      {/* <input
-        className="datepicker"
-        type="date"
-        name="date"
-        value={date}
-        onChange={e => setDate(e.target.value)}
-      /> */}
 
       <button
         id={classes.addButtonWidth}
