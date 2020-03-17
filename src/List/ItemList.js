@@ -90,9 +90,6 @@ const Items = props => {
     return itemB.nextPurchaseDate - itemA.nextPurchaseDate;
   };
 
-  // update the item.nextPurchaseDate to whole integer
-  // idle phlox just; , buyKindaSoon, buyNotSoSoon, inactive
-
   const filterAndSort = dbItems
     .filter(item => {
       if (item.name !== undefined) {
