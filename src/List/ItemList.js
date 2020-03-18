@@ -122,9 +122,21 @@ const Items = props => {
 
   const deleteConfirmation = (
     <Modal>
-      <p>Delete {itemToDelete}?</p>
-      <button onClick={() => handleConfirm()}>OK</button>
-      <button onClick={handleCancel}>Cancel</button>
+      <div className={classes.modalDelete}>
+        <p>Delete {itemToDelete}?</p>
+        <button
+          className="waves-effect waves-light btn-small red darken-3"
+          onClick={() => handleConfirm()}
+        >
+          OK
+        </button>
+        <button
+          className="waves-effect waves-light btn-small  grey darken-1"
+          onClick={handleCancel}
+        >
+          Cancel
+        </button>
+      </div>
     </Modal>
   );
 

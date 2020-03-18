@@ -16,3 +16,8 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+.modalDelete p {
+  font-size: 20px;
+  font-weight: 700;
+}
