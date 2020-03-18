@@ -165,7 +165,7 @@ const Items = props => {
   );
 
   return (
-    <div>
+    <div className="container">
       {isOpen && deleteConfirmation}
       {isViewDetailOpen && handleDetails}
 
@@ -186,7 +186,7 @@ const Items = props => {
         onChange={handleFilterChange}
         value={filterInput}
       />
-      <button onClick={clearValues}>X</button>
+      <button onClick={clearValues}>clear</button>
 
       {dbItems.length === 0 ? (
         <Fragment>
@@ -198,31 +198,37 @@ const Items = props => {
       ) : (
         <ul>
           {dbItems
-            .filter(item =>
-              item.name.toLowerCase().includes(filterInput.toLowerCase())
-            )
+            .filter(item => {
+              if (item.name) {
+                return item.name
+                  .toLowerCase()
+                  .includes(filterInput.toLowerCase());
+              }
+            })
             .map((item, index) => {
               return (
-                <li key={index}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      name="isPurchased"
-                      checked={is24Hours(item)}
-                      onChange={e => handleChange(e, item)}
-                      value={item.name}
-                    />
-                    <div>
-                      {item.name}
-                      <button onClick={e => showDetails(e, item)}>
-                        View Details
-                      </button>
-                    </div>
+                <li key={index} className={classes.itemContainer}>
+                  <div className={classes.checkbox}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="isPurchased"
+                        checked={is24Hours(item)}
+                        onChange={e => handleChange(e, item)}
+                        value={item.name}
+                      />
+                      <span>Purchased</span>
+                    </label>
+                  </div>
+                  <div>
+                    <button onClick={e => showDetails(e, item)}>
+                      View Details
+                    </button>
                     {item.name}
                     <button onClick={e => handleDelete(e)} value={item.name}>
                       X{" "}
                     </button>
-                  </label>
+                  </div>
                 </li>
               );
             })}

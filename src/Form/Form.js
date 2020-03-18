@@ -128,7 +128,7 @@ const Form = props => {
         className="btn waves-effect light-green darken-2"
       >
         ADD
-        <i class="material-icons left">add</i>
+        <i className="material-icons left">add</i>
       </button>
     </form>
   );
