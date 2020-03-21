@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import "firebase/firestore";
 import * as firebase from "../lib/firebase";
 
-import classes from "./List.module.css";
 import calculateEstimate from "../estimates";
 import Modal from "../Modal/Modal";
 
@@ -30,11 +29,6 @@ const Items = props => {
         });
     }
   }, [token, setdbItems, dbItems, props]);
-
-  /* Checks if a purchase date already exists - 
-  if not, creates a purchased date and increments # of purchases - 
-  if so, also sets the most recent purchase estimate, 
-  the most recent purchase interval and the calculated date of the next purchase */
 
   const handleMarkPurchased = (e, item) => {
     let datePurchased = new Date();
@@ -98,17 +92,7 @@ const Items = props => {
     })
     .sort(comparison);
 
-  const itemPurchased = filterAndSort.map((item, index) => {
-    let today = new Date();
-    let todayInSec = today.getTime() / 1000;
-
-    const buySoon = (item.nextPurchaseDate || item.frequency) < 7;
-    const buyKindaSoon =
-      (item.nextPurchaseDate || item.frequency) >= 7 &&
-      (item.nextPurchaseDate || item.frequency) < 30;
-    const buyNotSoSoon = (item.nextPurchaseDate || item.frequency) >= 30;
-    // const inactive = (todayInSec > (item.nextPurchaseDate * HOURS24 + item.datePurchased.seconds) * 2 )
-
+  function listItem(item, index) {
     return (
       <li key={index}>
         <label>
@@ -120,27 +104,41 @@ const Items = props => {
             value={item.name}
           />
           {item.name}
-          <button
-            role="button"
-            ariaLabel="delete item"
-            onClick={e => handleDelete(e)}
-            value={item.name}
-          >
+          <button onClick={e => handleDelete(e)} value={item.name}>
             Delete Item{" "}
           </button>
         </label>
       </li>
     );
+  }
+
+  const buySoonRender = filterAndSort.map((item, index) => {
+    const buySoon = (item.nextPurchaseDate || item.frequency) < 7;
+    return buySoon ? listItem(item, index) : null;
   });
 
-  function ItemSubList(props) {
-    return (
-      <div>
-        <h1 className={classes.buySoon}>{props.title}</h1>
-        <ul>{itemPurchased}</ul>
-      </div>
-    );
-  }
+  const buyKindaSoonRender = filterAndSort.map((item, index) => {
+    const buyKindaSoon =
+      (item.nextPurchaseDate || item.frequency) >= 7 &&
+      (item.nextPurchaseDate || item.frequency) < 30;
+    return buyKindaSoon ? listItem(item, index) : null;
+  });
+
+  const buyNotSoSoonRender = filterAndSort.map((item, index) => {
+    const buyNotSoSoon = (item.nextPurchaseDate || item.frequency) >= 30;
+    return buyNotSoSoon ? listItem(item, index) : null;
+  });
+
+  //if the item doesn't exist, should the list not appear?
+  const inactiveRender = filterAndSort.map((item, index) => {
+    let today = new Date();
+    let todayInSec = today.getTime() / 1000;
+    const inactive =
+      item &&
+      todayInSec >
+        (item.nextPurchaseDate * HOURS24 + item.datePurchased.seconds) * 2;
+    return inactive ? listItem(item, index) : null;
+  });
 
   //handling the confirmation for deleting an item
   const handleCancel = () => {
@@ -220,12 +218,17 @@ const Items = props => {
         </Fragment>
       ) : (
         <div>
-          {/* {buySoon}
-          {buyKindaSoon}
-          {buyNotSoSoon}
-          {inactive} */}
+          <h1> Buy Soon </h1>
+          {buySoonRender}
 
-          <ItemSubList />
+          <h1> Buy Kind Soon </h1>
+          {buyKindaSoonRender}
+
+          <h1> Buy Not So Soon</h1>
+          {buyNotSoSoonRender}
+
+          <h1> Inactive</h1>
+          {inactiveRender}
         </div>
       )}
     </div>
