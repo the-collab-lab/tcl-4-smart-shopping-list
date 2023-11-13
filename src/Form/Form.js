@@ -82,7 +82,7 @@ const Form = props => {
           onChange={e => setName(e.target.value)}
           required
         />
-        <label for="name">Item Name</label>
+        <label htmlFor="name">Item Name</label>
       </div>
       <div>
         <h5>How soon do you want to buy this again?</h5>
@@ -128,7 +128,7 @@ const Form = props => {
         className="btn waves-effect light-green darken-2"
       >
         ADD
-        <i class="material-icons left">add</i>
+        <i className="material-icons left">add</i>
       </button>
     </form>
   );
