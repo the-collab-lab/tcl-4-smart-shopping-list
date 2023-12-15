@@ -7,6 +7,7 @@ import ItemList from "./List/ItemList";
 import getToken from "./lib/token";
 import Form from "./Form/Form";
 import * as firebase from "./lib/firebase";
+import { ArchivalNoticeModal } from "@the-collab-lab/shopping-list-utils";
 
 function App() {
   const [isListSelected, setIsListSelected] = useState(true);
@@ -63,6 +64,7 @@ function App() {
       <div className="App">
         <Switch>
           <Route exact path="/">
+            <ArchivalNoticeModal />
             <button onClick={generateTokenHandler}>Get New Token</button>
             <button onClick={handleExistingToken}>Existing Token?</button>
 
